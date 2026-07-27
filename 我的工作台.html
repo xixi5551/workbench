@@ -1,0 +1,3716 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我的工作台</title>
+<style>
+:root {
+  --primary: #e8a0b3;
+  --primary-light: #f5c2d0;
+  --primary-dark: #c97a8e;
+  --bg: #fdf5f7;
+  --card: #ffffff;
+  --text: #2c3338;
+  --text-light: #6b7480;
+  --text-muted: #9ba3ad;
+  --border: #e4e8e4;
+  --accent: #e8b4a0;
+  --warning: #e8a87c;
+  --success: #4a9d7f;
+  --danger: #d9717d;
+  --shadow: 0 2px 8px rgba(74, 157, 127, 0.08);
+  --shadow-hover: 0 4px 16px rgba(74, 157, 127, 0.15);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ 侧边栏 ============ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+
+.sidebar-header p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.nav {
+  flex: 1;
+  padding: 16px 12px;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.nav-item.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.nav-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ============ 主内容 ============ */
+.main {
+  margin-left: 220px;
+  min-height: 100vh;
+  padding: 32px 40px;
+  max-width: 1100px;
+}
+
+.page {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.page-header p {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* ============ 卡片 ============ */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title .emoji {
+  font-size: 18px;
+}
+
+/* ============ 仪表盘 ============ */
+.dash-greeting {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: #fff;
+  padding: 28px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.dash-greeting .date {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 6px;
+}
+
+.dash-greeting h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.dash-greeting .sub {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.dash-today {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.today-section h3 {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.today-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.today-item .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.today-item.done .dot {
+  background: var(--text-muted);
+}
+
+.today-item.done span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.today-item.empty {
+  color: var(--text-muted);
+  font-style: italic;
+  justify-content: center;
+}
+
+/* ============ 待办 ============ */
+.todo-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.todo-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.todo-select {
+  padding: 12px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.btn {
+  padding: 12px 18px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.todo-check {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  background: #fff;
+}
+
+.todo-check.done {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.todo-check.done::after {
+  content: "✓";
+  font-size: 14px;
+}
+
+.todo-content {
+  flex: 1;
+}
+
+.todo-text {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.todo-delete {
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 16px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.todo-delete:hover {
+  opacity: 1;
+  color: var(--danger);
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-study { background: #e3f2fd; color: #1976d2; }
+.tag-life { background: #fff3e0; color: #f57c00; }
+.tag-other { background: #f3e5f5; color: #7b1fa2; }
+
+/* ============ 英语模块 ============ */
+.phase-card {
+  background: linear-gradient(135deg, #4a9d7f 0%, #6cb89a 100%);
+  color: #fff;
+  padding: 22px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.phase-card .phase-label {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.phase-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.phase-progress {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+}
+
+.phase-progress div {
+  opacity: 0.95;
+}
+
+.phase-progress strong {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.english-today {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.english-today h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.english-today .rec-type {
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step.done .step-num {
+  background: var(--text-muted);
+}
+
+.step-content {
+  flex: 1;
+  font-size: 13px;
+}
+
+.step-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.step-desc {
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+.step-check {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.step-check.done {
+  background: var(--primary);
+  border-color: var(--primary);
+  position: relative;
+}
+
+.step-check.done::after {
+  content: "✓";
+  position: absolute;
+  color: #fff;
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.material-section {
+  margin-bottom: 20px;
+}
+
+.material-section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.material-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.material-card {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  border-left: 3px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.material-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.material-card .name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.material-card .desc {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+.material-card .link {
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* 素材分类 tab */
+.material-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.material-tab {
+  padding: 8px 16px;
+  background: var(--bg);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.material-tab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* 素材列表项（文章式） */
+.article-item {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.article-item:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.article-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: #fff;
+}
+
+.article-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.article-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.article-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.article-meta span {
+  margin-right: 10px;
+}
+
+.article-desc {
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.article-arrow {
+  color: var(--text-muted);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.article-item.done {
+  opacity: 0.6;
+}
+
+.article-item.done .article-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+
+/* 素材详情页 */
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-light);
+  cursor: pointer;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.detail-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: #fff;
+  padding: 22px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.detail-header .badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.detail-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.detail-header .meta {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.detail-header .meta span {
+  margin-right: 14px;
+}
+
+.detail-section {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+
+.detail-section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.detail-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.flow-step {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  align-items: flex-start;
+}
+
+.flow-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.flow-text {
+  font-size: 13px;
+  flex: 1;
+}
+
+.flow-text strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.flow-text span {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+
+.play-btn:hover {
+  background: var(--primary-dark);
+}
+
+.play-btn.hint {
+  background: var(--bg);
+  color: var(--text-light);
+  font-weight: 500;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.diff-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.weekly-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.cal-day .day-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.cal-day.done {
+  background: var(--primary);
+  color: #fff;
+}
+
+.cal-day.done .day-label {
+  color: rgba(255,255,255,0.8);
+}
+
+.cal-day.rest {
+  background: #fff8e1;
+}
+
+.cal-day.today {
+  border-color: var(--primary);
+}
+
+.cal-day .check-icon {
+  font-size: 14px;
+}
+
+/* ============ 运动模块 ============ */
+.exercise-info {
+  background: #fff8e1;
+  border-left: 3px solid var(--warning);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.exercise-info strong {
+  color: var(--warning);
+}
+
+.exercise-phase-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.phase-tab {
+  flex: 1;
+  padding: 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+  transition: all 0.2s;
+}
+
+.phase-tab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.exercise-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.exercise-day {
+  aspect-ratio: 1;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.exercise-day.done {
+  background: var(--primary);
+  color: #fff;
+}
+
+.exercise-day.rest {
+  background: #f5f5f5;
+  color: var(--text-muted);
+}
+
+.exercise-day.today {
+  border: 2px solid var(--primary);
+}
+
+.exercise-routine {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+.routine-step {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.routine-step:last-child {
+  border-bottom: none;
+}
+
+.routine-time {
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.routine-desc {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.routine-desc strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.routine-desc span {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.jump-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 12px;
+  transition: all 0.2s;
+}
+
+.jump-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* ============ 阅读模块 ============ */
+.book-category {
+  margin-bottom: 24px;
+}
+
+.book-category h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.book-card {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 8px;
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.book-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.book-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.book-author {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.book-meta {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.book-meta span {
+  margin-right: 10px;
+}
+
+.book-reason {
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.book-difficulty {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.diff-easy { background: #e8f5e9; color: #2e7d32; }
+.diff-medium { background: #fff3e0; color: #ef6c00; }
+.diff-hard { background: #fce4ec; color: #c62828; }
+
+/* ============ 复盘 ============ */
+.review-section {
+  margin-bottom: 20px;
+}
+
+.review-section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.review-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  resize: vertical;
+}
+
+.review-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #fff;
+}
+
+.habit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+}
+
+.habit-row .name {
+  flex: 1;
+  font-size: 13px;
+}
+
+.habit-row .status {
+  display: flex;
+  gap: 4px;
+}
+
+.habit-btn {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 11px;
+  cursor: pointer;
+  background: #fff;
+  color: var(--text-light);
+}
+
+.habit-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ============ 移动端 ============ */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 101;
+  width: 44px;
+  height: 44px;
+  background: var(--card);
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--primary);
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 99;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main {
+    margin-left: 0;
+    padding: 70px 16px 32px;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+  .overlay.show {
+    display: block;
+  }
+  .dash-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-today {
+    grid-template-columns: 1fr;
+  }
+  .material-grid {
+    grid-template-columns: 1fr;
+  }
+  .weekly-calendar, .exercise-week {
+    gap: 4px;
+  }
+  .cal-day, .exercise-day {
+    font-size: 9px;
+  }
+}
+
+/* ============ 工具栏 ============ */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 24px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.empty-state .emoji {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.tip-box {
+  background: #e8f5e9;
+  border-left: 3px solid var(--primary);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin: 12px 0;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.tip-box strong {
+  color: var(--primary-dark);
+}
+
+.warning-box {
+  background: #fff3e0;
+  border-left: 3px solid var(--warning);
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.warning-box strong {
+  color: var(--warning);
+}
+
+/* 复盘模块 - 心情 emoji */
+.mood-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.mood-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid transparent;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.mood-btn.active {
+  background: var(--primary);
+  border-color: var(--primary-dark);
+  transform: scale(1.1);
+}
+
+/* 复盘模块 - 深度问题标题 */
+.deep-question {
+  background: linear-gradient(135deg, #fdeef3, #f5dde4);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+/* 复盘模块 - 本周复盘墙 */
+.week-wall {
+  background: #fdeef3;
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-top: 16px;
+}
+.week-wall h3 {
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+.week-wall .sub-title {
+  font-size: 12px;
+  color: var(--text-light);
+  margin: 10px 0 6px;
+  font-weight: 600;
+}
+.kw-tag {
+  display: inline-block;
+  background: #f5c2d0;
+  color: #6b3a4a;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin: 2px;
+  font-size: 12px;
+}
+.habit-rate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.habit-rate-row .name { width: 80px; color: var(--text); }
+.habit-rate-bar {
+  flex: 1;
+  background: #f5dde4;
+  border-radius: 8px;
+  height: 10px;
+  overflow: hidden;
+}
+.habit-rate-fill {
+  background: linear-gradient(90deg, #e8a0b3, #f5c2d0);
+  height: 100%;
+  border-radius: 8px;
+}
+.habit-rate-row .pct { width: 36px; text-align: right; color: var(--text-light); }
+.deep-excerpt {
+  background: white;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.deep-excerpt .d { color: var(--primary); font-weight: 600; margin-right: 6px; }
+
+/* 备份提示条 */
+.backup-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--primary-dark);
+  color: white;
+  padding: 10px 16px;
+  font-size: 13px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+}
+.backup-bar.show { display: flex; }
+.backup-bar button {
+  background: white;
+  color: var(--primary-dark);
+  border: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.backup-bar .close-x {
+  background: transparent;
+  color: white;
+  padding: 0 8px;
+}
+
+/* sidebar 备份按钮 */
+.backup-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.backup-btn:hover { background: var(--primary); color: white; }
+
+.download-app-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, #e8a0b3, #d68aa0);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(232,160,179,0.4);
+}
+.download-app-btn:hover { opacity: 0.9; }
+
+.note-list {
+  margin-top: 8px;
+}
+
+.note-item {
+  background: var(--bg);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.note-item .note-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+/* 高三提示 */
+.hint-banner {
+  background: linear-gradient(135deg, #e8b4a0 0%, #f0c4b0 100%);
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.hint-banner strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- ============ 侧边栏 ============ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1>我的工作台</h1>
+    <p id="sidebarDate">2026年7月27日 周一</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-item" data-page="dashboard" onclick="switchPage('dashboard')">
+      <span class="nav-icon">🏠</span> 今日仪表盘
+    </div>
+    <div class="nav-item" data-page="todo" onclick="switchPage('todo')">
+      <span class="nav-icon">✅</span> 每日待办
+    </div>
+    <div class="nav-item" data-page="english" onclick="switchPage('english')">
+      <span class="nav-icon">📚</span> 英语技能打底
+    </div>
+    <div class="nav-item" data-page="exercise" onclick="switchPage('exercise')">
+      <span class="nav-icon">💪</span> 运动健身
+    </div>
+    <div class="nav-item" data-page="reading" onclick="switchPage('reading')">
+      <span class="nav-icon">📖</span> 阅读追踪
+    </div>
+    <div class="nav-item" data-page="math" onclick="switchPage('math')">
+      <span class="nav-icon">📐</span> 数学高考一轮
+    </div>
+    <div class="nav-item active" data-page="review" onclick="switchPage('review')">
+      <span class="nav-icon">📝</span> 每日复盘
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    数据存储在本地浏览器<br>切换设备可用导出功能
+    <button class="backup-btn" onclick="exportData()">📥 导出备份</button>
+    <button class="backup-btn" onclick="importData()">📤 导入恢复</button>
+    <button class="download-app-btn" onclick="downloadAsApp()">📱 下载到本地（永久可用）</button>
+  </div>
+</aside>
+
+<!-- ============ 主内容 ============ -->
+<main class="main">
+
+<!-- ========== 仪表盘 ========== -->
+<section class="page" id="page-dashboard">
+  <div class="dash-greeting">
+    <div class="date" id="dashDate">2026年7月27日 周一</div>
+    <h2 id="dashGreeting">早上好 ☀️</h2>
+    <div class="sub" id="dashSub">今天也要加油哦</div>
+  </div>
+
+  <div class="dash-stats">
+    <div class="stat-card">
+      <div class="stat-value" id="statEnglish">0</div>
+      <div class="stat-label">英语连续天数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statExercise">0</div>
+      <div class="stat-label">运动连续天数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statReading">0</div>
+      <div class="stat-label">阅读连续天数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="statWeekRate">0%</div>
+      <div class="stat-label">本周完成率</div>
+    </div>
+  </div>
+
+  <div class="dash-today">
+    <div class="card today-section">
+      <h3>🎯 今日英语</h3>
+      <div id="dashEnglishToday"><div class="today-item"><div class="dot"></div><span>动画片段</span></div>
+       <div class="today-item empty">15 分钟 · 听力+跟读+一句话</div></div>
+    </div>
+    <div class="card today-section">
+      <h3>💪 今日运动</h3>
+      <div id="dashExerciseToday"><div class="today-item"><div class="dot"></div><span>唤醒期（第 1-4 周）</span></div>
+       <div class="today-item empty">15-20 分钟/次</div></div>
+    </div>
+  </div>
+
+  <div class="card today-section">
+    <h3>📐 今日数学</h3>
+    <div id="dashMathToday"><div class="today-item " onclick="switchPage('math')" style="cursor:pointer;"><div class="dot"></div><span>🎯 今日：1.1 集合</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📋</span> 今日待办</div>
+    <div id="dashTodoList">
+      <div class="today-item " onclick="toggleTodo(1785120329423.7676)" style="cursor:pointer;">
+        <div class="dot"></div>
+        <span>📚 英语 15min（听力+跟读+一句话）</span>
+      </div>
+    
+      <div class="today-item " onclick="toggleTodo(1785120329423.4482)" style="cursor:pointer;">
+        <div class="dot"></div>
+        <span>📐 数学：1.1 集合 (基础) 2-3h</span>
+      </div>
+    
+      <div class="today-item " onclick="toggleTodo(1785120329423.0054)" style="cursor:pointer;">
+        <div class="dot"></div>
+        <span>💪 芭杆运动（热身+跟练+拉伸，每周3次）</span>
+      </div>
+    
+      <div class="today-item " onclick="toggleTodo(1785120329423.4023)" style="cursor:pointer;">
+        <div class="dot"></div>
+        <span>📖 阅读 15-20min（每周2-3次）</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 待办 ========== -->
+<section class="page" id="page-todo">
+  <div class="page-header">
+    <h2>✅ 每日待办</h2>
+    <p>记录每天临时要做的事，按分类管理</p>
+  </div>
+
+  <div class="card">
+    <div class="todo-input-row">
+      <input type="text" class="todo-input" id="todoInput" placeholder="添加一个待办..." onkeypress="if(event.key==='Enter')addTodo()">
+      <select class="todo-select" id="todoCategory">
+        <option value="study">学习</option>
+        <option value="life">生活</option>
+        <option value="other">其他</option>
+      </select>
+      <button class="btn" onclick="addTodo()">添加</button>
+    </div>
+    <div id="todoList"></div>
+  </div>
+
+  <div class="tip-box">
+    <strong>💡 使用提示</strong><br>
+    待办是"临时任务"的地方（比如交作业、买书）。常规的英语/运动/阅读任务在各自模块里打卡，不在这里重复记。
+  </div>
+</section>
+
+<!-- ========== 英语 ========== -->
+<section class="page" id="page-english">
+  <div class="page-header">
+    <h2>📚 英语技能打底</h2>
+    <p>高三轻量版 · 每天 ≤15 分钟 · 每周 5-6 天 · 为雅思打底，反哺高考</p>
+  </div>
+
+  <div class="phase-card">
+    <div class="phase-label">当前阶段</div>
+    <h3>高三轻量打底期</h3>
+    <div class="phase-progress">
+      <div><strong id="englishStreak">0</strong>连续天数</div>
+      <div><strong id="englishTotal">0</strong>累计天数</div>
+      <div><strong>15</strong>分钟/天</div>
+    </div>
+  </div>
+
+  <div class="english-today">
+    <h3>🎯 今日任务</h3>
+    <div class="rec-type" id="englishRecType">加载中...</div>
+    <div class="steps" id="englishSteps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">听力输入 8-10 分钟</div>
+          <div class="step-desc">第一遍盲听（不开字幕）→ 第二遍开英文字幕看一遍，不查词</div>
+        </div>
+        <div class="step-check" onclick="toggleEnglishStep(0)"></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">跟读影子 3-5 分钟</div>
+          <div class="step-desc">选 30 秒-1 分钟片段，三遍法：盲听→看字幕精听→同步跟读</div>
+        </div>
+        <div class="step-check" onclick="toggleEnglishStep(1)"></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">一句话记录 1-2 分钟</div>
+          <div class="step-desc">用英语写一句话，记录素材内容或感受（允许查 1-2 个词）</div>
+        </div>
+        <div class="step-check" onclick="toggleEnglishStep(2)"></div>
+      </div>
+    </div>
+    <input type="text" class="todo-input" id="englishSentence" placeholder="写下今天的一句话（英语）..." style="margin-top:12px;" onblur="saveEnglishSentence()">
+    <div id="englishSentenceHistory" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📅</span> 本周打卡</div>
+    <div class="weekly-calendar" id="englishCalendar"></div>
+  </div>
+
+  <div class="section-title">🎬 素材库（点击进入学习）</div>
+
+  <div class="material-tabs">
+    <div class="material-tab active" data-cat="animation" onclick="switchMaterialCat('animation')">动画片段</div>
+    <div class="material-tab" data-cat="vlog" onclick="switchMaterialCat('vlog')">口播/Vlog</div>
+    <div class="material-tab" data-cat="movie" onclick="switchMaterialCat('movie')">影视片段</div>
+    <div class="material-tab" data-cat="info" onclick="switchMaterialCat('info')">信息向</div>
+  </div>
+
+  <div id="materialList"></div>
+
+  <div id="materialDetail" style="display:none;"></div>
+
+  <div class="tip-box">
+    <strong>📖 跟读三遍法</strong><br>
+    1️⃣ 盲听（30秒-1分钟）：不看字幕，听个大概，不追求听懂<br>
+    2️⃣ 看字幕精听：盯着嘴型，注意连读、吞音、重音<br>
+    3️⃣ 同步跟读：延迟0.5秒跟着说，不暂停，听不清的糊过去<br>
+    <strong>判断难度</strong>：能跟上 70% 合适；&lt;30% 太难换素材；&gt;90% 太简单换素材
+  </div>
+
+  <div class="warning-box">
+    <strong>⚠️ 第一周你会觉得自己很蠢</strong><br>
+    所有人刚开始跟读都这样，2-3 周后会突然顺起来。这个"突然顺起来"的瞬间就是进步信号。
+  </div>
+</section>
+
+<!-- ========== 运动 ========== -->
+<section class="page" id="page-exercise">
+  <div class="page-header">
+    <h2>💪 运动健身</h2>
+    <p>12 周芭杆入门塑形 · 每周 3-4 天 · 紧致线条、改善体态、调节内分泌</p>
+  </div>
+
+  <div class="exercise-info">
+    <strong>📋 你的画像</strong><br>
+    身高 163cm / 体重 40kg / BMI 15.1（偏瘦）/ 长期不运动 / 关节有无痛弹响<br>
+    <strong>目标</strong>：紧致纤细、小肌群有力、有气质、不长块 · <strong>喜欢当前体重不刻意减</strong>
+  </div>
+
+  <div class="warning-box">
+    <strong>⚠️ 三条铁律（关节友好）</strong><br>
+    1️⃣ <strong>必做热身</strong>：每次练前 3-5 分钟动态热身，冷关节直接动 = 受伤风险<br>
+    2️⃣ <strong>弹响+疼痛立刻停</strong>：无痛弹响 OK，有痛就是损伤信号<br>
+    3️⃣ <strong>前 8 周避免高冲击</strong>：不跳、不跑、不深蹲到底
+  </div>
+
+  <div class="exercise-phase-tabs">
+    <div class="phase-tab active" data-phase="1" onclick="switchPhase(1)">第 1-4 周 唤醒期</div>
+    <div class="phase-tab" data-phase="2" onclick="switchPhase(2)">第 5-8 周 强化期</div>
+    <div class="phase-tab" data-phase="3" onclick="switchPhase(3)">第 9-12 周 塑形期</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📅</span> 本周打卡</div>
+    <div class="exercise-week" id="exerciseWeek"></div>
+  </div>
+
+  <div id="routineContainer"></div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">✅</span> 今日运动任务</div>
+    <div id="exerciseStepsBox"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">🎬</span> 跟练资源</div>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:10px;">点击下方按钮跳转 B 站搜索欧阳春晓芭杆课程，选择对应阶段的视频跟练。</p>
+    <a class="jump-btn" href="https://search.bilibili.com/all?keyword=%E6%AC%A7%E9%98%B3%E6%98%A5%E6%99%93%20%E8%8A%AD%E6%9D%86" target="_blank">📺 跳转 B 站搜索欧阳春晓芭杆</a>
+    <div class="tip-box" style="margin-top:14px;">
+      <strong>💡 选课建议</strong><br>
+      • <strong>唤醒期</strong>：选 10-15 分钟的"入门/零基础/温和"芭杆视频<br>
+      • <strong>强化期</strong>：选 20-25 分钟的"基础芭杆/芭蕾塑形"<br>
+      • <strong>塑形期</strong>：选 25-30 分钟的"完整芭杆/进阶"<br>
+      • 跟练时<strong>动作幅度比视频小一些</strong>，量力而行，不硬撑
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📝</span> 运动记录</div>
+    <input type="text" class="todo-input" id="exerciseNote" placeholder="今天练了什么？感受如何？" style="margin-bottom:10px;" onblur="saveExerciseNote()">
+    <div id="exerciseNoteHistory"></div>
+  </div>
+
+  <div class="tip-box">
+    <strong>🍎 运动日加餐提醒</strong><br>
+    你体重偏低，运动日容易食欲下降。建议运动后 30 分钟内加一份加餐（一根香蕉 / 一杯酸奶 / 几片面包），不用吃多，<strong>别掉体重</strong>就行。规律运动 3-4 周后食欲会恢复稳定。
+  </div>
+
+  <div class="tip-box">
+    <strong>💤 内分泌 &amp; 作息</strong><br>
+    芭杆这种中低强度规律运动是调节内分泌最有效的非药物手段之一。配合你正在调整的作息，3-4 周后睡眠和状态会明显改善。<strong>但别晚上 9 点后练</strong>，会兴奋影响睡眠。
+  </div>
+</section>
+
+<!-- ========== 阅读 ========== -->
+<section class="page" id="page-reading">
+  <div class="page-header">
+    <h2>📖 阅读追踪</h2>
+    <p>补文化底子 · 培养阅读习惯 · 每周 2-3 次 · 每次 15-20 分钟</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📊</span> 当前在读 + 进度</div>
+    <div id="currentBookBox"></div>
+  </div>
+
+  <div class="hint-banner">
+    <strong>📚 阅读策略</strong>
+    gap 三年导致文化常识断层很正常，别焦虑。书单按"从薄到厚、从易到难"排序，<strong>先培养习惯再谈深度</strong>。第一本 100 多页，2 天就能读完，先有"读完一本书"的成就感。
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📊</span> 阅读统计</div>
+    <div class="dash-stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:0;">
+      <div class="stat-card">
+        <div class="stat-value" id="readStreak">0</div>
+        <div class="stat-label">连续天数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="readTotal">0</div>
+        <div class="stat-label">累计天数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="readFinished">0</div>
+        <div class="stat-label">读完本数</div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="section-title">📚 推荐书单（从薄到厚排序）</div>
+
+  <div class="book-category">
+    <h3>🌱 轻松入门（培养习惯）</h3>
+
+    <div class="book-card" onclick="toggleBookFinished(0)">
+      <div class="book-num">1</div>
+      <div class="book-info">
+        <div class="book-title">《小王子》<span class="book-difficulty diff-easy">入门</span></div>
+        <div class="book-author">[法] 圣埃克苏佩里</div>
+        <div class="book-meta"><span>📄 约 100 页</span><span>⏱️ 2-3 天</span></div>
+        <div class="book-reason">篇幅极短、语言简单、哲理深。补回"读完一本书"的成就感，是培养阅读习惯的最佳起点。中英对照版还能顺便练英语。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(1)">
+      <div class="book-num">2</div>
+      <div class="book-info">
+        <div class="book-title">《活着》<span class="book-difficulty diff-easy">入门</span></div>
+        <div class="book-author">余华</div>
+        <div class="book-meta"><span>📄 约 190 页</span><span>⏱️ 3-4 天</span></div>
+        <div class="book-reason">当代经典、语言极简、故事抓人。一口气能读完，读完会有很多感触，是补"文化谈资"的高性价比之选。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(2)">
+      <div class="book-num">3</div>
+      <div class="book-info">
+        <div class="book-title">《撒哈拉的故事》<span class="book-difficulty diff-easy">入门</span></div>
+        <div class="book-author">三毛</div>
+        <div class="book-meta"><span>📄 约 250 页</span><span>⏱️ 4-5 天</span></div>
+        <div class="book-reason">散文集、每篇独立、轻松好读。三毛的文字有灵气，读完会让你想看更多书。也是谈吐里很好的素材。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-category">
+    <h3>🏮 东方经典补底</h3>
+
+    <div class="book-card" onclick="toggleBookFinished(3)">
+      <div class="book-num">4</div>
+      <div class="book-info">
+        <div class="book-title">《唐诗三百首》（注释版）<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">蘅塘退士 编</div>
+        <div class="book-meta"><span>📄 选读</span><span>⏱️ 每天 2-3 首</span></div>
+        <div class="book-reason">直接补你说的"古诗都不知道"的断层。不用全背，每天读 2-3 首看注释，一个月后你会发现语文素养和谈吐都变了。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(4)">
+      <div class="book-num">5</div>
+      <div class="book-info">
+        <div class="book-title">《人间草木》<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">汪曾祺</div>
+        <div class="book-meta"><span>📄 约 200 页</span><span>⏱️ 5-6 天</span></div>
+        <div class="book-reason">汪曾祺的散文淡而有味，写草木食物人间。读他能学到"怎么把日常写得有味道"，对你的写作和谈吐都有帮助。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(5)">
+      <div class="book-num">6</div>
+      <div class="book-info">
+        <div class="book-title">《论语》（译注版）<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">孔子 / 杨伯峻 译注</div>
+        <div class="book-meta"><span>📄 选读</span><span>⏱️ 每天 5-10 则</span></div>
+        <div class="book-reason">中国文化底子中的底子。不用全读，每天看 5-10 则译注，你会发现很多"该懂但不知道"的典故都从这里来。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-category">
+    <h3>🏛️ 西方经典入门</h3>
+
+    <div class="book-card" onclick="toggleBookFinished(6)">
+      <div class="book-num">7</div>
+      <div class="book-info">
+        <div class="book-title">《动物农场》<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">[英] 乔治·奥威尔</div>
+        <div class="book-meta"><span>📄 约 130 页</span><span>⏱️ 3 天</span></div>
+        <div class="book-reason">篇幅短、寓言体、好读但有深度。西方知识分子必读，读完后你对"权力""平等"会有新认识，谈吐素材 +1。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(7)">
+      <div class="book-num">8</div>
+      <div class="book-info">
+        <div class="book-title">《月亮与六便士》<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">[英] 毛姆</div>
+        <div class="book-meta"><span>📄 约 280 页</span><span>⏱️ 5-7 天</span></div>
+        <div class="book-reason">讲一个人抛弃一切去画画的故事。毛姆讲故事的能力一流，读起来停不下来。"月亮与六便士"本身就是一个高频文化梗。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(8)">
+      <div class="book-num">9</div>
+      <div class="book-info">
+        <div class="book-title">《苏菲的世界》<span class="book-difficulty diff-hard">挑战</span></div>
+        <div class="book-author">[挪] 乔斯坦·贾德</div>
+        <div class="book-meta"><span>📄 约 500 页</span><span>⏱️ 2-3 周</span></div>
+        <div class="book-reason">西方哲学史入门的最佳通俗读物。以小说形式讲哲学，读完你会对西方思想脉络有整体认识，谈吐深度直接上一个台阶。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-category">
+    <h3>🌍 通识人文（补该懂的知识）</h3>
+
+    <div class="book-card" onclick="toggleBookFinished(9)">
+      <div class="book-num">10</div>
+      <div class="book-info">
+        <div class="book-title">《人类简史》<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">[以] 尤瓦尔·赫拉利</div>
+        <div class="book-meta"><span>📄 约 440 页</span><span>⏱️ 2 周</span></div>
+        <div class="book-reason">近年最火的通识书。从认知革命讲到科技革命，读完你对人类历史会有清晰框架。和谁都能聊上几句的万能素材。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(10)">
+      <div class="book-num">11</div>
+      <div class="book-info">
+        <div class="book-title">《中国哲学简史》<span class="book-difficulty diff-hard">挑战</span></div>
+        <div class="book-author">冯友兰</div>
+        <div class="book-meta"><span>📄 约 400 页</span><span>⏱️ 2-3 周</span></div>
+        <div class="book-reason">中国人该懂的中国思想脉络。冯友兰写给外国人的讲稿，反而特别清晰。读完你会理解儒道佛为什么是今天这个样子。</div>
+      </div>
+    </div>
+
+    <div class="book-card" onclick="toggleBookFinished(11)">
+      <div class="book-num">12</div>
+      <div class="book-info">
+        <div class="book-title">《万历十五年》<span class="book-difficulty diff-medium">进阶</span></div>
+        <div class="book-author">黄仁宇</div>
+        <div class="book-meta"><span>📄 约 260 页</span><span>⏱️ 1 周</span></div>
+        <div class="book-reason">用一年讲透一个朝代。读历史能长见识，这本书篇幅适中、写法独特，是补"历史感"的好入口。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>💡 阅读节奏建议</strong><br>
+    • <strong>高三阶段</strong>：每周 2-3 次，每次 15-20 分钟，不贪多<br>
+    • <strong>从第 1 本开始</strong>：严格按顺序，先培养"读完"的成就感<br>
+    • <strong>允许跳</strong>：某本读不下去就换下一本，别硬啃<br>
+    • <strong>不背不抄</strong>：除非特别打动你，否则别做笔记，读下去最重要
+  </div>
+</section>
+
+
+<!-- ========== 数学 ========== -->
+<section class="page" id="page-math">
+  <div class="page-header">
+    <h2>📐 数学高考一轮</h2>
+    <p>零基础复读 · 目标高分 · 8月31日前追平 6/29-8/31 课程进度</p>
+  </div>
+
+  <div class="hint-banner">
+    <strong>⏰ 追赶目标</strong>
+    6月29日-8月31日共 32 节课（28视频+4直播），今天 7月25日，到 8月31日还有 37 天。按"基础课1天、标准课1天、重点课1.5天"的节奏，刚好能追平。
+  </div>
+
+  <div class="dash-stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
+    <div class="stat-card">
+      <div class="stat-value" id="mathTotal">32</div>
+      <div class="stat-label">总课程</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="mathDone">0</div>
+      <div class="stat-label">已完成</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="mathPercent">0%</div>
+      <div class="stat-label">总进度</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="mathTodayTarget">—</div>
+      <div class="stat-label">今日目标</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">🎯</span> 今日数学任务</div>
+    <div id="mathTodayBox"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📅</span> 7-8月课程日历（点击打卡）</div>
+    <div id="mathCalendar"></div>
+  </div>
+
+  <div class="section-title">📚 课程清单与学习流程</div>
+  <div id="mathLessonList"></div>
+
+  <div class="tip-box">
+    <strong>🔄 每节课的完整流程</strong><br>
+    1️⃣ <strong>预习</strong>（20 min）：先看教材/讲义，标记不懂的地方<br>
+    2️⃣ <strong>听课</strong>（2-3 h）：认真听，暂停思考，记笔记<br>
+    3️⃣ <strong>复习</strong>（30 min）：整理笔记，复盘例题思路<br>
+    4️⃣ <strong>练习</strong>（1-2 h）：做课后题，不求全对但要动手<br>
+    5️⃣ <strong>错题</strong>（20 min）：把错题抄到错题本，写明错因
+  </div>
+
+  <div class="warning-box">
+    <strong>⚠️ 零基础特别提醒</strong><br>
+    • 集合/逻辑/不等式基础如果听不懂，先去 B 站搜"高中数学必修一 集合"补基础<br>
+    • 函数是整轮复习的根基，3.1-3.10 这 10 节课务必扎实，不能赶<br>
+    • 直播课每周六，零基础可以先把当周新课听完再听直播，不要硬跟<br>
+    • 遇到卡住超过 2 小时的题，直接看答案理解，不要死磕
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📓</span> 数学错题本</div>
+    <textarea class="review-textarea" id="mathErrorNote" placeholder="今天卡住的题/错因/下次注意什么..." onblur="saveMathNote()"></textarea>
+    <div id="mathErrorHistory" style="margin-top:10px;"></div>
+  </div>
+</section>
+
+<!-- ========== 复盘 ========== -->
+<section class="page active" id="page-review">
+  <div class="page-header">
+    <h2>📝 每日复盘</h2>
+    <p>5-8 分钟，记录今天、规划明天 · 周末自动汇总本周</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="emoji">📅</span> <span id="reviewDate">2026年7月27日 周一</span></div>
+
+    <!-- 第一层：今日快照 -->
+    <div class="review-section">
+      <h3>📸 今日快照</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:4px;">心情</div>
+      <div class="mood-row" id="moodRow">
+        <div class="mood-btn" data-mood="😊" onclick="setMood('😊')">😊</div>
+        <div class="mood-btn" data-mood="😐" onclick="setMood('😐')">😐</div>
+        <div class="mood-btn" data-mood="😌" onclick="setMood('😌')">😌</div>
+        <div class="mood-btn" data-mood="😓" onclick="setMood('😓')">😓</div>
+        <div class="mood-btn" data-mood="🚀" onclick="setMood('🚀')">🚀</div>
+        <div class="mood-btn" data-mood="😴" onclick="setMood('😴')">😴</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-light);margin:10px 0 4px;">今日关键词</div>
+      <textarea class="review-textarea" id="reviewFeeling" placeholder="3-5 个词，用空格或斜杠隔开。如：专注 / 数学卡壳 / 早睡" onblur="saveReview()" style="min-height:50px;"></textarea>
+    </div>
+
+    <!-- 第二层：深度复盘（按星期轮换） -->
+    <div class="review-section">
+      <h3>🧠 今日深度复盘 <span style="font-size:11px;color:var(--text-light);font-weight:normal;">（3-5 分钟，回答下面这一个问题）</span></h3>
+      <div class="deep-question" id="deepQuestion">🎯 这周我最想搞定的一件事是什么？为什么它重要？</div>
+      <textarea class="review-textarea" id="reviewDeep" placeholder="想到什么写什么，不用长篇大论..." onblur="saveReview()"></textarea>
+    </div>
+
+    <!-- 第三层：明日一件事 -->
+    <div class="review-section">
+      <h3>🎯 明日一件事</h3>
+      <textarea class="review-textarea" id="reviewImprove" placeholder="明天我只要做好这一件事就够了..." onblur="saveReview()"></textarea>
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">限制 1 件，防过度计划。这件做成了，明天就算赢。</div>
+    </div>
+
+    <!-- 习惯完成情况 -->
+    <div class="review-section">
+      <h3>✅ 习惯完成情况</h3>
+      <div id="habitCheckList">
+        <div class="habit-row">
+          <div class="name">📚 英语技能 15 分钟</div>
+          <div class="status">
+            <div class="habit-btn" data-habit="english" data-val="0" onclick="setHabit('english',0)">未做</div>
+            <div class="habit-btn" data-habit="english" data-val="1" onclick="setHabit('english',1)">部分</div>
+            <div class="habit-btn" data-habit="english" data-val="2" onclick="setHabit('english',2)">完成</div>
+          </div>
+        </div>
+        <div class="habit-row">
+          <div class="name">💪 运动 / 芭杆</div>
+          <div class="status">
+            <div class="habit-btn" data-habit="exercise" data-val="0" onclick="setHabit('exercise',0)">未做</div>
+            <div class="habit-btn" data-habit="exercise" data-val="1" onclick="setHabit('exercise',1)">部分</div>
+            <div class="habit-btn" data-habit="exercise" data-val="2" onclick="setHabit('exercise',2)">完成</div>
+          </div>
+        </div>
+        <div class="habit-row">
+          <div class="name">📖 阅读 15-20 分钟</div>
+          <div class="status">
+            <div class="habit-btn" data-habit="reading" data-val="0" onclick="setHabit('reading',0)">未做</div>
+            <div class="habit-btn" data-habit="reading" data-val="1" onclick="setHabit('reading',1)">部分</div>
+            <div class="habit-btn" data-habit="reading" data-val="2" onclick="setHabit('reading',2)">完成</div>
+          </div>
+        </div>
+        <div class="habit-row">
+          <div class="name">📐 数学高考一轮</div>
+          <div class="status">
+            <div class="habit-btn" data-habit="math" data-val="0" onclick="setHabit('math',0)">未做</div>
+            <div class="habit-btn" data-habit="math" data-val="1" onclick="setHabit('math',1)">部分</div>
+            <div class="habit-btn" data-habit="math" data-val="2" onclick="setHabit('math',2)">完成</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 本周复盘墙（仅周末显示） -->
+  <div id="weekReviewWall"></div>
+
+  <div class="tip-box">
+    <strong>💡 复盘原则</strong><br>
+    • <strong>做完比做好重要</strong>——想不清楚也写两句，别空着<br>
+    • 每天只回答一个问题，不用每天填一样的格子<br>
+    • 连续 2 天某习惯"未做"才需要反思，单天断掉不算失败<br>
+    • 周六周日会自动出现「本周复盘墙」，帮你找反复出现的问题
+  </div>
+</section>
+
+</main>
+
+<script>
+// ============ 数据存储 ============
+const STORAGE_KEY = 'workbench_data_v1';
+
+let data = loadData();
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return {
+    todos: [],
+    english: { streak: 0, total: 0, calendar: {}, steps: {}, sentences: [] },
+    exercise: { streak: 0, total: 0, calendar: {}, notes: [], phase: 1 },
+    exerciseSteps: {},
+    reading: { streak: 0, total: 0, finished: [], todayDone: {}, notes: [], currentBook: 0, progress: {} },
+    math: {},
+    mathSteps: {},
+    mathNotes: [],
+    review: {}
+  };
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function dayOfWeek() {
+  return new Date().getDay(); // 0=周日, 1=周一...
+}
+
+// ============ 页面切换 ============
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+  if (window.innerWidth <= 768) toggleSidebar();
+  renderPage(page);
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function jumpTo(url) {
+  window.open(url, '_blank');
+}
+
+// ============ 日期显示 ============
+function initDate() {
+  const d = new Date();
+  const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+  const dateStr = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${weekdays[d.getDay()]}`;
+  document.getElementById('sidebarDate').textContent = dateStr;
+  document.getElementById('dashDate').textContent = dateStr;
+  document.getElementById('reviewDate').textContent = dateStr;
+
+  const hour = d.getHours();
+  let greeting = '你好 👋';
+  if (hour < 6) greeting = '夜深了 🌙';
+  else if (hour < 11) greeting = '早上好 ☀️';
+  else if (hour < 14) greeting = '中午好 🌤️';
+  else if (hour < 18) greeting = '下午好 ☕';
+  else if (hour < 22) greeting = '晚上好 🌆';
+  else greeting = '夜深了 🌙';
+  document.getElementById('dashGreeting').textContent = greeting;
+}
+
+// ============ 待办 ============
+function addTodo() {
+  const input = document.getElementById('todoInput');
+  const cat = document.getElementById('todoCategory').value;
+  const text = input.value.trim();
+  if (!text) return;
+  data.todos.push({
+    id: Date.now(),
+    text: text,
+    category: cat,
+    done: false,
+    date: todayKey()
+  });
+  saveData();
+  input.value = '';
+  renderTodos();
+  renderDashboard();
+}
+
+function toggleTodo(id) {
+  const t = data.todos.find(t => t.id === id);
+  if (t) { t.done = !t.done; saveData(); renderTodos(); renderDashboard(); }
+}
+
+function deleteTodo(id) {
+  data.todos = data.todos.filter(t => t.id !== id);
+  saveData();
+  renderTodos();
+  renderDashboard();
+}
+
+function renderTodos() {
+  const list = document.getElementById('todoList');
+  const todayTodos = data.todos.filter(t => t.date === todayKey());
+  if (todayTodos.length === 0) {
+    list.innerHTML = '<div class="empty-state"><span class="emoji">📝</span>今天还没有待办<br>添加一个开始吧</div>';
+    return;
+  }
+  const catNames = { study: '学习', life: '生活', other: '其他' };
+  list.innerHTML = todayTodos.map(t => `
+    <div class="todo-item ${t.done?'done':''}">
+      <div class="todo-check ${t.done?'done':''}" onclick="toggleTodo(${t.id})"></div>
+      <div class="todo-content">
+        <div class="todo-text">${t.text}</div>
+        <div class="todo-meta"><span class="tag tag-${t.category}">${catNames[t.category]}</span></div>
+      </div>
+      <div class="todo-delete" onclick="deleteTodo(${t.id})">×</div>
+    </div>
+  `).join('');
+}
+
+// ============ 英语模块 ============
+const ENGLISH_SCHEDULE = {
+  1: { type: '动画片段', suggest: 'Peppa Pig / Bluey' },
+  2: { type: 'YouTuber 口播', suggest: 'Easy English / Learn English with TV Series' },
+  3: { type: '影视片段', suggest: 'Disney·Pixar 短片 / Modern Family' },
+  4: { type: '动画片段（跟读为主）', suggest: 'We Bare Bears' },
+  5: { type: 'YouTuber 口播（跟读为主）', suggest: 'English with Lucy / Bob the Canadian' },
+  6: { type: '影视片段', suggest: 'Friends / Modern Family' },
+  0: { type: '休息 / 补卡日', suggest: '休息也是练习的一部分' }
+};
+
+// ============ 数学课程数据 ============
+const MATH_LESSONS = [
+  { id: 'm1', date: '2026-07-27', name: '1.1 集合', level: '基础', topic: '数学', type: 'video' },
+  { id: 'm2', date: '2026-07-28', name: '1.2 逻辑基础', level: '基础', topic: '数学', type: 'video' },
+  { id: 'm3', date: '2026-07-29', name: '2.1 不等式基础', level: '基础', topic: '数学', type: 'video' },
+  { id: 'm4', date: '2026-07-30', name: '2.2 二次专题', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm5', date: '2026-07-31', name: '2.3 基本不等式', level: '基础', topic: '数学', type: 'video' },
+  { id: 'm6', date: '2026-08-01', name: '3.1 函数基本知识', level: '基础', topic: '数学', type: 'video' },
+  { id: 'm7', date: '2026-08-03', name: '3.2 函数的单调性', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm8', date: '2026-08-04', name: '3.3 函数的奇偶性', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm9', date: '2026-08-05', name: '3.4 函数的对称性', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm10', date: '2026-08-06', name: '3.5 函数的周期性', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm11', date: '2026-08-07', name: '3.6 函数性质综合', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm12', date: '2026-08-08', name: '3.7 指对幂', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm13', date: '2026-08-10', name: '直播课 1（第一阶段答疑）', level: '直播', topic: '数学', type: 'live' },
+  { id: 'm14', date: '2026-08-11', name: '3.8 函数的值域', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm15', date: '2026-08-12', name: '3.9 函数的图像', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm16', date: '2026-08-13', name: '3.10 抽象函数综合', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm17', date: '2026-08-14', name: '4.1 三角函数公式', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm18', date: '2026-08-15', name: '4.2 三角函数的图像', level: '标准', topic: '数学', type: 'video' },
+  { id: 'm19', date: '2026-08-17', name: '5.1 函数单调性与极值（上）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm20', date: '2026-08-18', name: '直播课 2（第二阶段答疑）', level: '直播', topic: '数学', type: 'live' },
+  { id: 'm21', date: '2026-08-19', name: '5.1 函数单调性与极值（下）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm22', date: '2026-08-20', name: '5.2 导数的几何意义（上）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm23', date: '2026-08-21', name: '5.2 导数的几何意义（下）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm24', date: '2026-08-22', name: '直播课 3（第三阶段答疑）', level: '直播', topic: '数学', type: 'live' },
+  { id: 'm25', date: '2026-08-24', name: '5.3 不等式综合（上）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm26', date: '2026-08-25', name: '5.3 不等式综合（下）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm27', date: '2026-08-26', name: '5.4 含参不等式（上）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm28', date: '2026-08-27', name: '直播课 4（第四阶段答疑）', level: '直播', topic: '数学', type: 'live' },
+  { id: 'm29', date: '2026-08-28', name: '5.4 含参不等式（下）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm30', date: '2026-08-29', name: '5.5 函数的零点（上）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm31', date: '2026-08-30', name: '5.5 函数的零点（下）', level: '重点', topic: '数学', type: 'video' },
+  { id: 'm32', date: '2026-08-31', name: '6 平面向量（上）', level: '标准', topic: '数学', type: 'video' },
+];
+
+const MATH_END_DATE = '2026-08-31';
+
+const MATH_SCHEDULE = [
+  { date: '2026-07-26', dateDisplay: '7/26', weekday: '日', lesson: '🔄 缓冲复习日', level: '缓冲', type: 'buffer', task: '补练习 + 错题复习 + 整理笔记', detail: '补本周未完成的练习 → 错题本复习 → 整理本周笔记 → 可休息半天', hours: '2-3h', lessonId: 'buffer1' },
+  { date: '2026-07-27', dateDisplay: '7/27', weekday: '一', lesson: '1.1 集合', level: '基础', type: 'video', task: '听课 + 基础练习', detail: '预习15min → 听课1.5-2h → 基础练习30min → 标记完成', hours: '2-3h', lessonId: 'm1' },
+  { date: '2026-07-28', dateDisplay: '7/28', weekday: '二', lesson: '1.2 逻辑基础', level: '基础', type: 'video', task: '听课 + 基础练习', detail: '预习15min → 听课1.5-2h → 基础练习30min → 标记完成', hours: '2-3h', lessonId: 'm2' },
+  { date: '2026-07-29', dateDisplay: '7/29', weekday: '三', lesson: '2.1 不等式基础', level: '基础', type: 'video', task: '听课 + 基础练习', detail: '预习15min → 听课1.5-2h → 基础练习30min → 标记完成', hours: '2-3h', lessonId: 'm3' },
+  { date: '2026-07-30', dateDisplay: '7/30', weekday: '四', lesson: '2.2 二次专题', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm4' },
+  { date: '2026-07-31', dateDisplay: '7/31', weekday: '五', lesson: '2.3 基本不等式', level: '基础', type: 'video', task: '听课 + 基础练习', detail: '预习15min → 听课1.5-2h → 基础练习30min → 标记完成', hours: '2-3h', lessonId: 'm5' },
+  { date: '2026-08-01', dateDisplay: '8/1', weekday: '六', lesson: '3.1 函数基本知识', level: '基础', type: 'video', task: '听课 + 基础练习', detail: '预习15min → 听课1.5-2h → 基础练习30min → 标记完成', hours: '2-3h', lessonId: 'm6' },
+  { date: '2026-08-02', dateDisplay: '8/2', weekday: '日', lesson: '🔄 缓冲复习日', level: '缓冲', type: 'buffer', task: '补练习 + 错题复习 + 整理笔记', detail: '补本周未完成的练习 → 错题本复习 → 整理本周笔记 → 可休息半天', hours: '2-3h', lessonId: 'buffer2' },
+  { date: '2026-08-03', dateDisplay: '8/3', weekday: '一', lesson: '3.2 函数的单调性', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm7' },
+  { date: '2026-08-04', dateDisplay: '8/4', weekday: '二', lesson: '3.3 函数的奇偶性', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm8' },
+  { date: '2026-08-05', dateDisplay: '8/5', weekday: '三', lesson: '3.4 函数的对称性', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm9' },
+  { date: '2026-08-06', dateDisplay: '8/6', weekday: '四', lesson: '3.5 函数的周期性', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm10' },
+  { date: '2026-08-07', dateDisplay: '8/7', weekday: '五', lesson: '3.6 函数性质综合', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm11' },
+  { date: '2026-08-08', dateDisplay: '8/8', weekday: '六', lesson: '3.7 指对幂', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm12' },
+  { date: '2026-08-09', dateDisplay: '8/9', weekday: '日', lesson: '🔄 缓冲复习日', level: '缓冲', type: 'buffer', task: '补练习 + 错题复习 + 整理笔记', detail: '补本周未完成的练习 → 错题本复习 → 整理本周笔记 → 可休息半天', hours: '2-3h', lessonId: 'buffer3' },
+  { date: '2026-08-10', dateDisplay: '8/10', weekday: '一', lesson: '直播课 1（第一阶段答疑）', level: '直播', type: 'live', task: '看直播回放 + 记笔记', detail: '看回放视频（2-3h）→ 记重点笔记 → 标记不懂的地方', hours: '2-3h', lessonId: 'm13' },
+  { date: '2026-08-11', dateDisplay: '8/11', weekday: '二', lesson: '3.8 函数的值域', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm14' },
+  { date: '2026-08-12', dateDisplay: '8/12', weekday: '三', lesson: '3.9 函数的图像', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm15' },
+  { date: '2026-08-13', dateDisplay: '8/13', weekday: '四', lesson: '3.10 抽象函数综合', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm16' },
+  { date: '2026-08-14', dateDisplay: '8/14', weekday: '五', lesson: '4.1 三角函数公式', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm17' },
+  { date: '2026-08-15', dateDisplay: '8/15', weekday: '六', lesson: '4.2 三角函数的图像', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm18' },
+  { date: '2026-08-16', dateDisplay: '8/16', weekday: '日', lesson: '🔄 缓冲复习日', level: '缓冲', type: 'buffer', task: '补练习 + 错题复习 + 整理笔记', detail: '补本周未完成的练习 → 错题本复习 → 整理本周笔记 → 可休息半天', hours: '2-3h', lessonId: 'buffer4' },
+  { date: '2026-08-17', dateDisplay: '8/17', weekday: '一', lesson: '5.1 函数单调性与极值（上）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm19' },
+  { date: '2026-08-18', dateDisplay: '8/18', weekday: '二', lesson: '直播课 2（第二阶段答疑）', level: '直播', type: 'live', task: '看直播回放 + 记笔记', detail: '看回放视频（2-3h）→ 记重点笔记 → 标记不懂的地方', hours: '2-3h', lessonId: 'm20' },
+  { date: '2026-08-19', dateDisplay: '8/19', weekday: '三', lesson: '5.1 函数单调性与极值（下）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm21' },
+  { date: '2026-08-20', dateDisplay: '8/20', weekday: '四', lesson: '5.2 导数的几何意义（上）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm22' },
+  { date: '2026-08-21', dateDisplay: '8/21', weekday: '五', lesson: '5.2 导数的几何意义（下）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm23' },
+  { date: '2026-08-22', dateDisplay: '8/22', weekday: '六', lesson: '直播课 3（第三阶段答疑）', level: '直播', type: 'live', task: '看直播回放 + 记笔记', detail: '看回放视频（2-3h）→ 记重点笔记 → 标记不懂的地方', hours: '2-3h', lessonId: 'm24' },
+  { date: '2026-08-23', dateDisplay: '8/23', weekday: '日', lesson: '🔄 缓冲复习日', level: '缓冲', type: 'buffer', task: '补练习 + 错题复习 + 整理笔记', detail: '补本周未完成的练习 → 错题本复习 → 整理本周笔记 → 可休息半天', hours: '2-3h', lessonId: 'buffer5' },
+  { date: '2026-08-24', dateDisplay: '8/24', weekday: '一', lesson: '5.3 不等式综合（上）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm25' },
+  { date: '2026-08-25', dateDisplay: '8/25', weekday: '二', lesson: '5.3 不等式综合（下）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm26' },
+  { date: '2026-08-26', dateDisplay: '8/26', weekday: '三', lesson: '5.4 含参不等式（上）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm27' },
+  { date: '2026-08-27', dateDisplay: '8/27', weekday: '四', lesson: '直播课 4（第四阶段答疑）', level: '直播', type: 'live', task: '看直播回放 + 记笔记', detail: '看回放视频（2-3h）→ 记重点笔记 → 标记不懂的地方', hours: '2-3h', lessonId: 'm28' },
+  { date: '2026-08-28', dateDisplay: '8/28', weekday: '五', lesson: '5.4 含参不等式（下）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm29' },
+  { date: '2026-08-29', dateDisplay: '8/29', weekday: '六', lesson: '5.5 函数的零点（上）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm30' },
+  { date: '2026-08-30', dateDisplay: '8/30', weekday: '日', lesson: '5.5 函数的零点（下）', level: '重点', type: 'video', task: '听课 + 复习 + 练习 + 错题', detail: '预习20min → 听课2-3h → 复习整理30min → 课后练习1-1.5h → 错题整理', hours: '4-5h', lessonId: 'm31' },
+  { date: '2026-08-31', dateDisplay: '8/31', weekday: '一', lesson: '6 平面向量（上）', level: '标准', type: 'video', task: '听课 + 复习 + 练习', detail: '预习20min → 听课2h → 复习整理30min → 课后练习1h', hours: '3-4h', lessonId: 'm32' }
+];
+
+function getMathScheduleToday() {
+  const today = todayKey();
+  const startDate = '2026-07-26';
+  // 7/26 之前显示"明天开始"
+  if (today < startDate) {
+    return { notStarted: true, date: startDate, lesson: '1.1 集合', dateDisplay: '7/26', weekday: '日' };
+  }
+  // 找今天的计划
+  let todayPlan = MATH_SCHEDULE.find(s => s.date === today);
+  if (todayPlan) return todayPlan;
+  // 如果今天没排课，找最近的未来计划
+  const future = MATH_SCHEDULE.filter(s => s.date > today);
+  if (future.length > 0) return future[0];
+  return null;
+}
+
+function getMathScheduleProgress() {
+  let done = 0;
+  MATH_SCHEDULE.forEach(s => {
+    if (s.lessonId !== 'buffer' && data.math[s.lessonId]) done++;
+  });
+  return done;
+}
+
+function getMathTodayTarget() {
+  // 统一使用每日计划表
+  return getMathScheduleToday();
+}
+
+function renderMath() {
+  // 统计
+  let done = 0;
+  MATH_LESSONS.forEach(l => { if (data.math[l.id]) done++; });
+  const total = MATH_LESSONS.length;
+  const percent = Math.round(done / total * 100);
+  document.getElementById('mathDone').textContent = done;
+  document.getElementById('mathPercent').textContent = percent + '%';
+
+  // 今日计划
+  const todayPlan = getMathScheduleToday();
+  const box = document.getElementById('mathTodayBox');
+  if (!todayPlan) {
+    box.innerHTML = '<div class="today-item done"><div class="dot"></div><span>🎉 7-8月课程已全部完成！</span></div>';
+    document.getElementById('mathTodayTarget').textContent = '完成';
+  } else if (todayPlan.notStarted) {
+    // 7/26之前：显示"明天开始"
+    document.getElementById('mathTodayTarget').textContent = '7/26启动';
+    box.innerHTML = `
+      <div class="today-item">
+        <div class="dot" style="background:#81c784;"></div>
+        <span>🟢 7月26日(日) 开始第一课：${todayPlan.lesson}</span>
+      </div>
+      <div class="tip-box" style="margin-top:10px;margin-bottom:0;">
+        <strong>⏰ 明天正式开始</strong><br>今天可以先准备好教材、笔记本、错题本，调整好状态。明天按计划表第一节"1.1 集合"开始追赶！
+      </div>
+    `;
+  } else {
+    const isDone = todayPlan.lessonId && todayPlan.lessonId !== 'buffer' && data.math[todayPlan.lessonId];
+    const isOverdue = todayPlan.date < todayKey();
+    const isToday = todayPlan.date === todayKey();
+    const levelColor = todayPlan.type === 'live' ? '#ba68c8' : todayPlan.level === '基础' ? '#81c784' : todayPlan.level === '标准' ? '#64b5f6' : todayPlan.level === '重点' ? '#ffb74d' : '#ffd54f';
+    const levelEmoji = todayPlan.type === 'live' ? '📺' : todayPlan.level === '基础' ? '🟢' : todayPlan.level === '标准' ? '🔵' : todayPlan.level === '重点' ? '🔴' : '🟡';
+    document.getElementById('mathTodayTarget').textContent = todayPlan.dateDisplay;
+
+    if (todayPlan.lessonId === 'buffer') {
+      // 缓冲日：三步不同
+      const todaySteps = data.mathSteps[todayKey()] || [false, false, false];
+      box.innerHTML = `
+        <div class="today-item">
+          <div class="dot" style="background:#ffd54f;"></div>
+          <span>🟡 ${isToday?'今日':isOverdue?'补追':''} ${todayPlan.dateDisplay}(${todayPlan.weekday}) · ${todayPlan.lesson}</span>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:14px;margin-top:10px;">
+          <div style="font-size:12px;color:var(--text-light);line-height:1.6;">${todayPlan.detail}</div>
+          <div style="font-size:12px;color:var(--primary);font-weight:600;margin-top:6px;">⏱️ 预计 ${todayPlan.hours}</div>
+        </div>
+        <div class="steps" style="margin-top:14px;">
+          <div class="step ${todaySteps[0]?'done':''}">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">补本周未完成的练习</div>
+              <div class="step-desc">把本周来不及做的课后题补完</div>
+            </div>
+            <div class="step-check ${todaySteps[0]?'done':''}" onclick="toggleMathStep(0)"></div>
+          </div>
+          <div class="step ${todaySteps[1]?'done':''}">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">错题本复习</div>
+              <div class="step-desc">重做本周错题，确认是否真懂了</div>
+            </div>
+            <div class="step-check ${todaySteps[1]?'done':''}" onclick="toggleMathStep(1)"></div>
+          </div>
+          <div class="step ${todaySteps[2]?'done':''}">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">整理本周笔记 + 休息</div>
+              <div class="step-desc">整理笔记，归纳方法；留半天休息</div>
+            </div>
+            <div class="step-check ${todaySteps[2]?'done':''}" onclick="toggleMathStep(2)"></div>
+          </div>
+        </div>
+      `;
+    } else if (todayPlan.type === 'live') {
+      // 直播课：三步待办
+      const todaySteps = data.mathSteps[todayKey()] || [false, false, false];
+      box.innerHTML = `
+        <div class="today-item \${isDone?'done':''}">
+          <div class="dot" style="background:\${levelColor};"></div>
+          <span>📺 \${isToday?'今日':isOverdue?'补追':''} \${todayPlan.dateDisplay}(\${todayPlan.weekday}) · \${todayPlan.lesson}</span>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:14px;margin-top:10px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">📋 \${todayPlan.task}</div>
+          <div style="font-size:12px;color:var(--primary);font-weight:600;">⏱️ 预计 \${todayPlan.hours}</div>
+        </div>
+        <div class="steps" style="margin-top:14px;">
+          <div class="step \${todaySteps[0]?'done':''}">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">看直播回放 2-3h</div>
+              <div class="step-desc">认真看回放，跟着老师思路走</div>
+            </div>
+            <div class="step-check \${todaySteps[0]?'done':''}" onclick="toggleMathStep(0)"></div>
+          </div>
+          <div class="step \${todaySteps[1]?'done':''}">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">记重点笔记</div>
+              <div class="step-desc">记下老师讲的方法、技巧、易错点</div>
+            </div>
+            <div class="step-check \${todaySteps[1]?'done':''}" onclick="toggleMathStep(1)"></div>
+          </div>
+          <div class="step \${todaySteps[2]?'done':''}">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">标记不懂的地方</div>
+              <div class="step-desc">回放中没听懂的暂停标记，留到缓冲日查或问</div>
+            </div>
+            <div class="step-check \${todaySteps[2]?'done':''}" onclick="toggleMathStep(2)"></div>
+          </div>
+        </div>
+        \${isDone ? '<div class="today-item done" style="margin-top:8px;"><div class="dot"></div><span>✅ 今日直播课已完成</span></div>' : '<div class="today-item empty" style="margin-top:8px;">三步全部勾选 = 自动标记完成</div>'}
+      `;
+    } else {
+      // 正常课程日：三步待办（预习→听课→复习练习）
+      const todaySteps = data.mathSteps[todayKey()] || [false, false, false];
+
+      // 根据课程难度调整步骤描述
+      let step1Title, step1Desc, step2Title, step2Desc, step3Title, step3Desc;
+      if (todayPlan.level === '基础') {
+        step1Title = '预习教材 15min'; step1Desc = '看教材对应章节，标记不懂的地方';
+        step2Title = '听课 1.5-2h'; step2Desc = '认真听视频课，暂停思考，记笔记';
+        step3Title = '基础练习 30min'; step3Desc = '做课后基础题，做完标记完成';
+      } else if (todayPlan.level === '标准') {
+        step1Title = '预习讲义 20min'; step1Desc = '看讲义/教材，标记不懂的地方';
+        step2Title = '听课 2h'; step2Desc = '认真听视频课，暂停思考，记笔记';
+        step3Title = '复习 + 练习 1.5h'; step3Desc = '整理笔记30min → 课后练习1h';
+      } else { // 重点
+        step1Title = '预习讲义 20min'; step1Desc = '看讲义，标记难点，带着问题听课';
+        step2Title = '听课 2-3h'; step2Desc = '认真听，重点部分反复看，记笔记';
+        step3Title = '复习 + 练习 + 错题 2h'; step3Desc = '整理笔记30min → 练习1-1.5h → 错题整理20min';
+      }
+
+      box.innerHTML = `
+        <div class="today-item ${isDone?'done':''}">
+          <div class="dot" style="background:${levelColor};"></div>
+          <span>${levelEmoji} ${isToday?'今日':isOverdue?'补追':''} ${todayPlan.dateDisplay}(${todayPlan.weekday}) · ${todayPlan.lesson}</span>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:14px;margin-top:10px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:6px;">📋 ${todayPlan.task}</div>
+          <div style="font-size:12px;color:var(--primary);font-weight:600;">⏱️ 预计 ${todayPlan.hours}</div>
+        </div>
+        <div class="steps" style="margin-top:14px;">
+          <div class="step ${todaySteps[0]?'done':''}">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">${step1Title}</div>
+              <div class="step-desc">${step1Desc}</div>
+            </div>
+            <div class="step-check ${todaySteps[0]?'done':''}" onclick="toggleMathStep(0)"></div>
+          </div>
+          <div class="step ${todaySteps[1]?'done':''}">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">${step2Title}</div>
+              <div class="step-desc">${step2Desc}</div>
+            </div>
+            <div class="step-check ${todaySteps[1]?'done':''}" onclick="toggleMathStep(1)"></div>
+          </div>
+          <div class="step ${todaySteps[2]?'done':''}">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">${step3Title}</div>
+              <div class="step-desc">${step3Desc}</div>
+            </div>
+            <div class="step-check ${todaySteps[2]?'done':''}" onclick="toggleMathStep(2)"></div>
+          </div>
+        </div>
+        ${isDone ? '<div class="today-item done" style="margin-top:8px;"><div class="dot"></div><span>✅ 今日课程已完成</span></div>' : '<div class="today-item empty" style="margin-top:8px;">三步全部勾选 = 自动标记完成</div>'}
+      `;
+    }
+  }
+
+  // 生成每日计划表
+  let html = '<div style="background:var(--card);border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(74,157,127,0.08);margin-bottom:16px;">';
+  html += '<div style="font-size:16px;font-weight:600;margin-bottom:14px;">📅 37天每日计划表（7/26 - 8/31）· 32节课（28视频 + 4直播）+ 5缓冲日</div>';
+  html += '<div id="scheduleList">';
+
+  MATH_SCHEDULE.forEach(s => {
+    const isDone = s.lessonId !== 'buffer' && data.math[s.lessonId];
+    const isToday = s.date === todayKey();
+    const isPast = s.date < todayKey();
+    const levelColor = s.type === 'live' ? '#ba68c8' : s.level === '基础' ? '#81c784' : s.level === '标准' ? '#64b5f6' : s.level === '重点' ? '#ffb74d' : '#ffd54f';
+    const levelEmoji = s.type === 'live' ? '📺' : s.level === '基础' ? '🟢' : s.level === '标准' ? '🔵' : s.level === '重点' ? '🔴' : '🟡';
+
+    html += `<div class="article-item ${isDone?'done':''}" style="${isToday?'border:2px solid var(--primary);background:#f0f7f4;':''}${isPast && !isDone && s.lessonId !== 'buffer'?'border-left:3px solid var(--danger);':''}" onclick="${s.lessonId !== 'buffer' ? `toggleMathLesson('${s.lessonId}')` : ''}">`;
+    html += `<div class="article-thumb" style="background:${levelColor};font-size:14px;">${s.dateDisplay}</div>`;
+    html += `<div class="article-info">`;
+    html += `<div class="article-title">${levelEmoji} ${s.lesson} ${isToday?'<span style="color:var(--primary);font-size:12px;">← 今天</span>':''}</div>`;
+    html += `<div class="article-meta"><span>${s.weekday}</span><span>⏱️ ${s.hours}</span><span>${s.task}</span>${isDone?'<span style="color:var(--primary);">✅ 已完成</span>':''}</div>`;
+    html += `<div class="article-desc">${s.detail}</div>`;
+    html += `</div>`;
+    html += `<div class="article-arrow">${isDone ? '✓' : s.lessonId !== 'buffer' ? '›' : ''}</div>`;
+    html += `</div>`;
+  });
+
+  html += '</div></div>';
+  document.getElementById('mathLessonList').innerHTML = html;
+
+  // 日历
+  renderMathCalendar();
+
+  // 错题记录
+  const todayNote = data.mathNotes && data.mathNotes.find(n => n.date === todayKey());
+  if (todayNote) document.getElementById('mathErrorNote').value = todayNote.text;
+  const history = (data.mathNotes || []).slice(-5).reverse();
+  document.getElementById('mathErrorHistory').innerHTML = history.length > 0
+    ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">最近记录：</div>' +
+      history.map(n => `<div class="note-item"><div class="note-date">${n.date}</div>${n.text}</div>`).join('')
+    : '';
+}
+
+function toggleMathLesson(id) {
+  data.math[id] = !data.math[id];
+  saveData();
+  renderMath();
+  renderDashboard();
+}
+
+function toggleMathStep(i) {
+  const today = todayKey();
+  const todayPlan = getMathScheduleToday();
+  if (!todayPlan || todayPlan.notStarted) return;
+
+  if (!data.mathSteps) data.mathSteps = {};
+  if (!data.mathSteps[today]) data.mathSteps[today] = [false, false, false];
+  data.mathSteps[today][i] = !data.mathSteps[today][i];
+
+  // 三步全完成 → 自动标记课程完成
+  if (todayPlan.lessonId && todayPlan.lessonId !== 'buffer') {
+    if (data.mathSteps[today].every(x => x)) {
+      data.math[todayPlan.lessonId] = true;
+    } else {
+      // 取消任一步骤 → 取消完成标记
+      delete data.math[todayPlan.lessonId];
+    }
+  }
+  saveData();
+  renderMath();
+  renderDashboard();
+}
+
+function renderMathCalendar() {
+  const today = todayKey();
+  const start = new Date('2026-06-29');
+  const end = new Date('2026-08-31');
+  let html = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:11px;margin-bottom:6px;color:var(--text-muted);"><div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div></div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">';
+
+  // 补齐 6月29日前的空白（6月29日是周一，所以前面0天）
+  const startDay = start.getDay(); // 0=周日
+  for (let i = 0; i < startDay; i++) html += '<div></div>';
+
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const lesson = MATH_LESSONS.find(l => l.date === key);
+    const isToday = key === today;
+    const done = lesson && data.math[lesson.id];
+    const isLive = d.getDay() === 6 && !lesson; // 周六直播日
+    html += `<div style="aspect-ratio:1;background:${done?'var(--primary)':lesson?'#fff':isLive?'#fff8e1':'#f5f5f5'};border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;${isToday?'border:2px solid var(--primary);':''}color:${done?'#fff':lesson?'var(--text)':'var(--text-muted)'}">
+      <div style="font-size:9px;${done?'color:rgba(255,255,255,0.8);':''}">${d.getDate()}</div>
+      <div style="font-size:12px;">${done?'✓':lesson?'•':isLive?'播':''}</div>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('mathCalendar').innerHTML = html;
+}
+
+function saveMathNote() {
+  const text = document.getElementById('mathErrorNote').value.trim();
+  const today = todayKey();
+  if (!data.mathNotes) data.mathNotes = [];
+  const idx = data.mathNotes.findIndex(n => n.date === today);
+  if (text) {
+    if (idx >= 0) data.mathNotes[idx].text = text;
+    else data.mathNotes.push({ date: today, text: text });
+  } else if (idx >= 0) {
+    data.mathNotes.splice(idx, 1);
+  }
+  saveData();
+}
+
+// ============ 英语素材数据库（全部国内可访问）============
+const MATERIALS = {
+  animation: [
+    {
+      id: 'peppa', emoji: '🐷', name: 'Peppa Pig 小猪佩奇',
+      duration: '5 min/集', difficulty: '入门', diffClass: 'diff-easy',
+      desc: '语速慢、发音清晰、词汇日常。起步首选，别嫌幼稚——它的语速和清晰度是跟读入门的最佳起点。',
+      bili: 'https://search.bilibili.com/all?keyword=Peppa%20Pig%20%E8%8B%B1%E6%96%87%E7%89%88',
+      tips: '从第 1 季开始，每集只看 1 遍盲听 + 1 遍英文字幕。选 30 秒的家庭对话片段跟读。'
+    },
+    {
+      id: 'bluey', emoji: '🐶', name: 'Bluey 布鲁伊',
+      duration: '7 min/集', difficulty: '入门', diffClass: 'diff-easy',
+      desc: '澳大利亚动画，家庭日常对话、语速适中、温馨。比 Peppa Pig 稍难一点，适合第 3 周起换。',
+      bili: 'https://search.bilibili.com/all?keyword=Bluey%20%E5%B8%83%E9%B2%81%E4%BC%8A%20%E8%8B%B1%E6%96%87',
+      tips: '选有大量对话的集数，注意澳式发音和英式的区别。'
+    },
+    {
+      id: 'barebears', emoji: '🐻', name: 'We Bare Bears 咱们裸熊',
+      duration: '11 min/集', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '现代口语、语速稍快、有趣。三只熊的日常，对话自然，适合适应正常语速。',
+      bili: 'https://search.bilibili.com/all?keyword=We%20Bare%20Bears%20%E6%88%91%E4%BB%AC%E8%A3%B8%E7%86%8A%20%E8%8B%B1%E6%96%87',
+      tips: '语速比 Peppa Pig 快不少，跟不上时回到 Peppa Pig。'
+    },
+    {
+      id: 'gravity', emoji: '🌲', name: 'Gravity Falls 怪诞小镇',
+      duration: '22 min/集', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '剧情向、词汇稍丰富。有悬疑元素，看起来上瘾，适合能跟上 70% 后进阶用。',
+      bili: 'https://search.bilibili.com/all?keyword=Gravity%20Falls%20%E6%80%AA%E8%AF%9E%E5%B0%8F%E9%95%87%20%E8%8B%B1%E6%96%87',
+      tips: '每集较长，可以只取前 5 分钟做听力+跟读。'
+    }
+  ],
+  vlog: [
+    {
+      id: 'easyenglish', emoji: '🎤', name: 'Easy English（B站搬运）',
+      duration: '5-10 min', difficulty: '入门', diffClass: 'diff-easy',
+      desc: '街头采访、真实口语、有双语字幕。原频道在 YouTube，B 站有大量搬运合集，国内直接看。',
+      bili: 'https://search.bilibili.com/all?keyword=Easy%20English%20%E8%A1%97%E5%A4%B4%E9%87%87%E8%AE%BF',
+      tips: '采访内容短而真实，每段 30 秒-1 分钟，非常适合跟读。'
+    },
+    {
+      id: 'lucy', emoji: '👩‍🏫', name: 'English with Lucy（B站搬运）',
+      duration: '8-15 min', difficulty: '入门', diffClass: 'diff-easy',
+      desc: '英式发音、讲解清晰。Lucy 会专门讲发音要点和口语表达，B 站有搬运。',
+      bili: 'https://search.bilibili.com/all?keyword=English%20with%20Lucy%20%E5%8F%91%E9%9F%B3',
+      tips: '她的发音讲解视频特别适合跟读前看，帮你理解连读规则。'
+    },
+    {
+      id: 'tvseries', emoji: '🎬', name: 'Learn English with TV Series（B站搬运）',
+      duration: '10-20 min', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '用影视片段教英语、有趣。会把美剧片段拆开讲表达和发音，B 站有搬运。',
+      bili: 'https://search.bilibili.com/all?keyword=Learn%20English%20with%20TV%20Series%20%E5%AD%97%E5%B9%95',
+      tips: '讲解型视频，先听讲解再自己跟读片段。'
+    },
+    {
+      id: 'bob', emoji: '🇨🇦', name: 'Bob the Canadian（B站搬运）',
+      duration: '5-10 min', difficulty: '入门', diffClass: 'diff-easy',
+      desc: '语速慢、生活场景、清晰。加拿大人，带你看超市、咖啡店等生活场景，词汇简单实用。',
+      bili: 'https://search.bilibili.com/all?keyword=Bob%20the%20Canadian%20%E8%8B%B1%E8%AF%AD',
+      tips: '生活场景词汇重复率高，跟读容易上手。'
+    }
+  ],
+  movie: [
+    {
+      id: 'pixar', emoji: '🎞️', name: 'Disney·Pixar 短片',
+      duration: '2-7 min', difficulty: '入门', diffClass: 'diff-easy',
+      desc: '完整故事、画面辅助理解。Piper、Bao、Lou 这些短片 2-7 分钟，时长正好，无对话压力。',
+      bili: 'https://search.bilibili.com/all?keyword=Disney%20Pixar%20%E7%9F%AD%E7%89%87%20%E8%8B%B1%E6%96%87',
+      tips: '短片对话少但画面信息多，适合练"听+看画面猜"。跟读用旁白部分。'
+    },
+    {
+      id: 'modern', emoji: '👨‍👩‍👧‍👦', name: 'Modern Family 摩登家庭',
+      duration: '22 min/集', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '家庭日常、语速适中。伪纪录片形式，角色会直接对着镜头说话，适合跟读。',
+      bili: 'https://search.bilibili.com/all?keyword=Modern%20Family%20%E6%91%A9%E7%99%BB%E5%AE%B6%E5%BA%AD%20%E8%8B%B1%E6%96%87',
+      tips: '选 Phil 或 Claire 对镜头说话的片段，短且清晰。'
+    },
+    {
+      id: 'friends', emoji: '☕', name: 'Friends 老友记',
+      duration: '22 min/集', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '经典、口语化、大量学习素材。B 站有完整版和带字幕版，学习资源最丰富。',
+      bili: 'https://search.bilibili.com/all?keyword=Friends%20%E8%80%81%E5%8F%8B%E8%AE%B0%20%E8%8B%B1%E6%96%87%E7%89%88',
+      tips: '每集选一个场景（2-3 分钟）做听力+跟读，别贪整集。'
+    },
+    {
+      id: 'bigbang', emoji: '⚛️', name: 'The Big Bang Theory',
+      duration: '22 min/集', difficulty: '挑战', diffClass: 'diff-hard',
+      desc: '词汇量稍大、幽默。有大量科学词汇和美式幽默，适合能跟上 80% 后挑战。',
+      bili: 'https://search.bilibili.com/all?keyword=The%20Big%20Bang%20Theory%20%E7%94%9F%E6%B4%BB%E5%A4%A7%E7%88%86%E7%82%B8%20%E8%8B%B1%E6%96%87',
+      tips: 'Sheldon 的台词语速快且用词难，先跟 Penny 的简单台词。'
+    }
+  ],
+  info: [
+    {
+      id: 'bbc6', emoji: '📻', name: 'BBC 6 Minute English（B站搬运）',
+      duration: '6 min', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '6 分钟、语速慢、话题广。BBC 官方出品，两人对话式讲解话题，B 站有大量搬运。',
+      bili: 'https://search.bilibili.com/all?keyword=BBC%206%20Minute%20English%20%E5%AD%97%E5%B9%95',
+      tips: '第 5 周起每周 1 天用这个。每集有明确主题，适合做信息向输入。'
+    },
+    {
+      id: 'voa', emoji: '📰', name: 'VOA Learning English（B站搬运）',
+      duration: '3-5 min', difficulty: '进阶', diffClass: 'diff-medium',
+      desc: '美式、语速慢、新闻向。VOA 专为学习者设计，语速比真实新闻慢一半，B 站有搬运。',
+      bili: 'https://search.bilibili.com/all?keyword=VOA%20Learning%20English%20%E5%AD%97%E5%B9%95',
+      tips: '新闻词汇重复率高，听 3-5 期后你会发现常见词都认识了。'
+    },
+    {
+      id: 'teded', emoji: '💡', name: 'TED-Ed（B站搬运）',
+      duration: '4-5 min', difficulty: '挑战', diffClass: 'diff-hard',
+      desc: '4-5 分钟、有字幕、知识性。动画知识短片，话题从历史到科学，B 站官方有账号。',
+      bili: 'https://search.bilibili.com/all?keyword=TED-Ed%20%E5%AD%97%E5%B9%95%20%E4%B8%AD%E8%8B%B1',
+      tips: '语速正常偏快，词汇量大，适合第 8 周后挑战。'
+    }
+  ]
+};
+
+const CAT_NAMES = {
+  animation: '动画片段',
+  vlog: '口播/Vlog',
+  movie: '影视片段',
+  info: '信息向'
+};
+
+function switchMaterialCat(cat) {
+  data.english.currentCat = cat;
+  saveData();
+  document.querySelectorAll('.material-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.material-tab[data-cat="${cat}"]`).classList.add('active');
+  // 从详情页返回时重新显示列表
+  document.getElementById('materialDetail').style.display = 'none';
+  document.getElementById('materialList').style.display = 'block';
+  renderMaterialList();
+}
+
+function renderMaterialList() {
+  const cat = data.english.currentCat || 'animation';
+  const list = MATERIALS[cat];
+  const html = list.map((m, i) => `
+    <div class="article-item" onclick="showMaterialDetail('${cat}', ${i})">
+      <div class="article-thumb">${m.emoji}</div>
+      <div class="article-info">
+        <div class="article-title">${m.name}</div>
+        <div class="article-meta">
+          <span>⏱️ ${m.duration}</span>
+          <span class="diff-badge ${m.diffClass}">${m.difficulty}</span>
+        </div>
+        <div class="article-desc">${m.desc}</div>
+      </div>
+      <div class="article-arrow">›</div>
+    </div>
+  `).join('');
+  document.getElementById('materialList').innerHTML = html;
+}
+
+function showMaterialDetail(cat, index) {
+  const m = MATERIALS[cat][index];
+  const html = `
+    <div class="detail-back" onclick="backToMaterialList()">← 返回素材列表</div>
+    <div class="detail-header">
+      <div class="badge">${CAT_NAMES[cat]}</div>
+      <h3>${m.emoji} ${m.name}</h3>
+      <div class="meta">
+        <span>⏱️ ${m.duration}</span>
+        <span>📊 ${m.difficulty}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>📖 关于这个素材</h4>
+      <p style="font-size:13px;color:var(--text-light);line-height:1.6;">${m.desc}</p>
+      <div class="tip-box" style="margin-top:10px;">
+        <strong>💡 使用提示</strong><br>${m.tips}
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>🎯 今日 15 分钟学习流程</h4>
+      <div class="detail-flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">
+            <strong>听力输入 8-10 分钟</strong>
+            <span>第一遍盲听（不开字幕）→ 第二遍开英文字幕看一遍，不查词</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">
+            <strong>跟读影子 3-5 分钟</strong>
+            <span>选 30 秒-1 分钟片段，三遍法：盲听→看字幕精听→同步跟读</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">
+            <strong>一句话记录 1-2 分钟</strong>
+            <span>用英语写一句话，记录素材内容或感受</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>▶️ 去哪里播放？</h4>
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:8px;">点击下方按钮跳转 B 站搜索，选择一个视频开始跟练。建议选有<strong>英文字幕</strong>的版本。</p>
+      <a class="play-btn" href="${m.bili}" target="_blank">📺 去 B 站观看 / 搜索</a>
+      <div class="play-btn hint">💡 记得开英文字幕，不要开中文字幕</div>
+    </div>
+
+    <div class="detail-section">
+      <h4>📖 跟读三遍法</h4>
+      <div class="tip-box">
+        <strong>1️⃣ 盲听</strong>（30秒-1分钟）：不看字幕，听个大概，不追求听懂每个词<br>
+        <strong>2️⃣ 看字幕精听</strong>：盯着嘴型，注意连读、吞音、重音<br>
+        <strong>3️⃣ 同步跟读</strong>：延迟0.5秒跟着说，不暂停，听不清的糊过去
+      </div>
+      <div class="tip-box" style="background:#fff3e0;border-left-color:var(--warning);">
+        <strong>难度判断</strong>：能跟上 70% 合适；<30% 太难换素材；>90% 太简单换素材
+      </div>
+    </div>
+  `;
+  document.getElementById('materialList').style.display = 'none';
+  document.getElementById('materialDetail').style.display = 'block';
+  document.getElementById('materialDetail').innerHTML = html;
+  // 滚动到顶部
+  document.getElementById('materialDetail').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function backToMaterialList() {
+  document.getElementById('materialDetail').style.display = 'none';
+  document.getElementById('materialList').style.display = 'block';
+}
+
+function renderEnglish() {
+  const dow = dayOfWeek();
+  const sch = ENGLISH_SCHEDULE[dow];
+  document.getElementById('englishRecType').innerHTML = `今日推荐：${sch.type} · ${sch.suggest}`;
+
+  // 连续天数计算
+  updateEnglishStreak();
+  document.getElementById('englishStreak').textContent = data.english.streak;
+  document.getElementById('englishTotal').textContent = data.english.total;
+
+  // 渲染素材列表
+  if (!data.english.currentCat) data.english.currentCat = 'animation';
+  renderMaterialList();
+
+  // 步骤勾选
+  const todaySteps = data.english.steps[todayKey()] || [false, false, false];
+  document.querySelectorAll('#englishSteps .step-check').forEach((el, i) => {
+    el.classList.toggle('done', todaySteps[i]);
+  });
+
+  // 一句话
+  const todaySentence = data.english.sentences.find(s => s.date === todayKey());
+  if (todaySentence) document.getElementById('englishSentence').value = todaySentence.text;
+
+  // 一句话历史
+  const history = data.english.sentences.slice(-5).reverse();
+  document.getElementById('englishSentenceHistory').innerHTML = history.length > 0
+    ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">最近记录：</div>' +
+      history.map(s => `<div class="note-item"><div class="note-date">${s.date}</div>${s.text}</div>`).join('')
+    : '';
+
+  // 日历
+  renderEnglishCalendar();
+}
+
+function updateEnglishStreak() {
+  const cal = data.english.calendar;
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (cal[key]) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  data.english.streak = streak;
+  data.english.total = Object.keys(cal).length;
+}
+
+function toggleEnglishStep(i) {
+  const today = todayKey();
+  if (!data.english.steps[today]) data.english.steps[today] = [false, false, false];
+  data.english.steps[today][i] = !data.english.steps[today][i];
+  // 三步全完成则打卡
+  if (data.english.steps[today].every(x => x)) {
+    data.english.calendar[today] = true;
+  } else {
+    delete data.english.calendar[today];
+  }
+  saveData();
+  renderEnglish();
+  renderDashboard();
+}
+
+function saveEnglishSentence() {
+  const text = document.getElementById('englishSentence').value.trim();
+  const today = todayKey();
+  const idx = data.english.sentences.findIndex(s => s.date === today);
+  if (text) {
+    if (idx >= 0) data.english.sentences[idx].text = text;
+    else data.english.sentences.push({ date: today, text: text });
+  } else if (idx >= 0) {
+    data.english.sentences.splice(idx, 1);
+  }
+  saveData();
+  renderEnglish();
+}
+
+function renderEnglishCalendar() {
+  const weekdays = ['日','一','二','三','四','五','六'];
+  const today = todayKey();
+  const d = new Date();
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1));
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    const key = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const isToday = key === today;
+    const isDone = data.english.calendar[key];
+    const isRest = i === 6;
+    html += `<div class="cal-day ${isDone?'done':''} ${isRest?'rest':''} ${isToday?'today':''}">
+      <div class="day-label">${weekdays[i+1===7?0:i+1]}</div>
+      <div class="check-icon">${isDone?'✓':''}</div>
+    </div>`;
+  }
+  document.getElementById('englishCalendar').innerHTML = html;
+}
+
+// ============ 运动模块 ============
+const EXERCISE_PHASES = {
+  1: {
+    name: '唤醒期（第 1-4 周）',
+    goal: '唤醒关节肌肉、建立运动习惯、避免受伤',
+    weekly: '每周 3 天，隔天练（如周一三五）',
+    duration: '15-20 分钟/次',
+    routine: [
+      { time: '3-5 min', title: '动态热身（必做）', desc: '颈部绕环、肩部绕环、手腕脚踝绕环、轻柔开合跳（不跳起来，只摆臂）、躯干扭转' },
+      { time: '8-10 min', title: '温和芭杆跟练', desc: '选 10-15 分钟的零基础/入门芭杆视频，动作幅度比视频小一些，量力而行' },
+      { time: '3 min', title: '拉伸放松', desc: '大腿前侧、后侧、髋部、肩部拉伸，每个动作 30 秒' }
+    ],
+    tips: '前 2 周可能觉得"太简单"，别加量。关节和肌肉需要时间适应。弹响无痛正常，有痛立刻停。'
+  },
+  2: {
+    name: '强化期（第 5-8 周）',
+    goal: '增加小肌群力量、改善体态、开始塑形',
+    weekly: '每周 3-4 天',
+    duration: '20-25 分钟/次',
+    routine: [
+      { time: '3-5 min', title: '动态热身（必做）', desc: '同唤醒期，可加快节奏' },
+      { time: '15-18 min', title: '基础芭杆跟练', desc: '选 20 分钟左右的基础芭杆/芭蕾塑形视频，开始注重动作标准' },
+      { time: '3-5 min', title: '拉伸放松', desc: '同前，可加一个泡沫轴放松（如有）' }
+    ],
+    tips: '这时你应该能感觉肌肉有力一些了。注意听教练的"发力点"提示，芭杆练的是精准发力不是动作数量。'
+  },
+  3: {
+    name: '塑形期（第 9-12 周）',
+    goal: '线条收紧、体态稳定、感受气质变化',
+    weekly: '每周 4 天',
+    duration: '25-30 分钟/次',
+    routine: [
+      { time: '5 min', title: '动态热身（必做）', desc: '同前，可加入芭蕾基础动作（plié、tendu）作为热身' },
+      { time: '18-22 min', title: '完整芭杆跟练', desc: '选 25-30 分钟的完整芭杆/进阶视频，注重呼吸和延伸感' },
+      { time: '5 min', title: '拉伸放松', desc: '同前，每个动作延长到 45 秒' }
+    ],
+    tips: '12 周结束时你应该能感受到：站姿更挺拔、肌肉更紧实、睡眠更好。这时可以考虑进入下一阶段或尝试新运动。'
+  }
+};
+
+function switchPhase(phase) {
+  data.exercise.phase = phase;
+  saveData();
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.phase-tab[data-phase="${phase}"]`).classList.add('active');
+  renderExercise();
+}
+
+function renderExercise() {
+  const phase = data.exercise.phase || 1;
+  const p = EXERCISE_PHASES[phase];
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.phase-tab[data-phase="${phase}"]`)?.classList.add('active');
+
+  let html = `<div class="exercise-routine">
+    <div class="card-title"><span class="emoji">🏃</span> ${p.name}</div>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:6px;"><strong>目标</strong>：${p.goal}</p>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:6px;"><strong>频率</strong>：${p.weekly} · ${p.duration}</p>
+    <div style="margin-top:14px;">`;
+  p.routine.forEach(r => {
+    html += `<div class="routine-step">
+      <div class="routine-time">${r.time}</div>
+      <div class="routine-desc"><strong>${r.title}</strong><span>${r.desc}</span></div>
+    </div>`;
+  });
+  html += `</div>
+    <div class="tip-box" style="margin-top:14px;"><strong>💡 阶段提示</strong><br>${p.tips}</div>
+  </div>`;
+  document.getElementById('routineContainer').innerHTML = html;
+
+  // 打卡日历
+  renderExerciseWeek();
+  renderExerciseSteps();
+
+  // 记录
+  const todayNote = data.exercise.notes.find(n => n.date === todayKey());
+  if (todayNote) document.getElementById('exerciseNote').value = todayNote.text;
+  const history = data.exercise.notes.slice(-5).reverse();
+  document.getElementById('exerciseNoteHistory').innerHTML = history.length > 0
+    ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">最近记录：</div>' +
+      history.map(n => `<div class="note-item"><div class="note-date">${n.date}</div>${n.text}</div>`).join('')
+    : '';
+}
+
+function renderExerciseWeek() {
+  const weekdays = ['日','一','二','三','四','五','六'];
+  const today = todayKey();
+  const d = new Date();
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1));
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    const key = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const isToday = key === today;
+    const isDone = data.exercise.calendar[key];
+    const isRest = i === 6;
+    html += `<div class="exercise-day ${isDone?'done':''} ${isRest?'rest':''} ${isToday?'today':''}" onclick="toggleExerciseDay('${key}')">
+      <div style="font-size:10px;">${weekdays[i+1===7?0:i+1]}</div>
+      <div style="font-size:14px;">${isDone?'✓':''}</div>
+    </div>`;
+  }
+  document.getElementById('exerciseWeek').innerHTML = html;
+}
+
+function toggleExerciseDay(key) {
+  if (data.exercise.calendar[key]) {
+    delete data.exercise.calendar[key];
+  } else {
+    data.exercise.calendar[key] = true;
+  }
+  updateExerciseStreak();
+  saveData();
+  renderExercise();
+  renderDashboard();
+}
+
+function updateExerciseStreak() {
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (data.exercise.calendar[key]) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  data.exercise.streak = streak;
+  data.exercise.total = Object.keys(data.exercise.calendar).length;
+}
+
+function saveExerciseNote() {
+  const text = document.getElementById('exerciseNote').value.trim();
+  const today = todayKey();
+  const idx = data.exercise.notes.findIndex(n => n.date === today);
+  if (text) {
+    if (idx >= 0) data.exercise.notes[idx].text = text;
+    else data.exercise.notes.push({ date: today, text: text });
+  } else if (idx >= 0) {
+    data.exercise.notes.splice(idx, 1);
+  }
+  saveData();
+  renderExercise();
+}
+
+// ============ 阅读模块 ============
+function renderCurrentBook() {
+  const box = document.getElementById('currentBookBox');
+  const titles = ['小王子', '活着', '撒哈拉的故事', '唐诗三百首', '人间草木', '论语', '动物农场', '月亮与六便士', '苏菲的世界', '人类简史', '中国哲学简史', '万历十五年'];
+  const pages = [100, 190, 250, 300, 200, 0, 130, 280, 500, 440, 400, 260];
+  if (!data.reading.currentBook) data.reading.currentBook = 0;
+  const cb = data.reading.currentBook;
+  const cur = (data.reading.progress && data.reading.progress[cb]) || 0;
+  const total = pages[cb];
+  const pct = total > 0 ? Math.round(cur/total*100) : 0;
+  
+  box.innerHTML = `
+    <select class="todo-select" onchange="changeCurrentBook(this.value)" style="width:100%;padding:10px;font-size:14px;margin-bottom:14px;">
+      ${titles.map((t,i) => '<option value="'+i+'" '+(i===cb?'selected':'')+'>'+(i+1)+'. 《'+t+'》</option>').join('')}
+    </select>
+    ${total > 0 ? `
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-light);margin-bottom:6px;">
+      <span>已读 ${cur} / ${total} 页</span>
+      <span>${pct}%</span>
+    </div>
+    <div style="background:#f5dde4;border-radius:10px;height:12px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.06);">
+      <div style="background:linear-gradient(90deg,#e8a0b3,#f5c2d0);height:100%;width:${pct}%;transition:width 0.4s;border-radius:10px;"></div>
+    </div>
+    <input type="number" id="pageInput" placeholder="今天读了X页" class="todo-input" style="margin-top:12px;" onchange="updateBookProgress(this.value)" min="0" max="${total}">
+    <button class="btn btn-sm" onclick="markBookFinished()" style="margin-top:10px;width:100%;">✅ 标记读完换下一本</button>
+    ` : '<div style="font-size:12px;color:var(--text-light);margin-top:10px;">此书为选读书目，每天读多少都算打卡</div>'}
+  `;
+}
+
+function changeCurrentBook(v) {
+  data.reading.currentBook = parseInt(v);
+  saveData();
+  renderReading();
+}
+
+function updateBookProgress(v) {
+  const n = parseInt(v);
+  if (!isNaN(n) && n >= 0) {
+    if (!data.reading.progress) data.reading.progress = {};
+    data.reading.progress[data.reading.currentBook] = n;
+    saveData();
+    renderReading();
+  }
+}
+
+function markBookFinished() {
+  const cb = data.reading.currentBook || 0;
+  if (!data.reading.finished.includes(cb)) data.reading.finished.push(cb);
+  if (cb < 11) {
+    data.reading.currentBook = cb + 1;
+    if (!data.reading.progress) data.reading.progress = {};
+    data.reading.progress[cb+1] = 0;
+  }
+  saveData();
+  renderReading();
+}
+
+function renderExerciseSteps() {
+  const phase = data.exercise.phase || 1;
+  const isRest = new Date().getDay() === 0;
+  const box = document.getElementById('exerciseStepsBox');
+  
+  if (isRest) {
+    box.innerHTML = '<div class="today-item"><div class="dot"></div><span>今天是周日休息日，给身体恢复</span></div>';
+    return;
+  }
+  
+  const todaySteps = data.exerciseSteps[todayKey()] || [false, false, false];
+  const isDone = todaySteps.every(x => x);
+  
+  let s1, s2, s3;
+  if (phase === 1) {
+    s1 = {t: '动态热身 3-5 min', d: '颈肩腕踝绕环 + 躯干扭转（必做，保护关节）'};
+    s2 = {t: '芭杆跟练 8-10 min', d: '欧阳春晓入门芭杆，动作幅度比视频小'};
+    s3 = {t: '拉伸放松 3 min', d: '大腿前后侧、髋部、肩部拉伸'};
+  } else if (phase === 2) {
+    s1 = {t: '动态热身 3-5 min', d: '加快节奏，做好全身激活'};
+    s2 = {t: '芭杆跟练 15-18 min', d: '基础芭杆，注重动作标准'};
+    s3 = {t: '拉伸放松 3-5 min', d: '同上，可加泡沫轴'};
+  } else {
+    s1 = {t: '动态热身 5 min', d: '加入 plié、tendu 作为热身'};
+    s2 = {t: '芭杆跟练 18-22 min', d: '完整芭杆/进阶，注重呼吸和延伸'};
+    s3 = {t: '拉伸放松 5 min', d: '每个动作延长到 45 秒'};
+  }
+  
+  box.innerHTML = `
+    <div class="today-item ${isDone?'done':''}"><div class="dot"></div><span>💪 ${EXERCISE_PHASES[phase].name}</span></div>
+    <div style="background:var(--bg);border-radius:8px;padding:12px;margin-top:10px;">
+      <div style="font-size:12px;color:var(--primary);font-weight:600;">⏱️ 共 ${EXERCISE_PHASES[phase].duration}</div>
+    </div>
+    <div class="steps" style="margin-top:14px;">
+      <div class="step ${todaySteps[0]?'done':''}">
+        <div class="step-num">1</div>
+        <div class="step-content"><div class="step-title">${s1.t}</div><div class="step-desc">${s1.d}</div></div>
+        <div class="step-check ${todaySteps[0]?'done':''}" onclick="toggleExerciseStep(0)"></div>
+      </div>
+      <div class="step ${todaySteps[1]?'done':''}">
+        <div class="step-num">2</div>
+        <div class="step-content"><div class="step-title">${s2.t}</div><div class="step-desc">${s2.d}</div></div>
+        <div class="step-check ${todaySteps[1]?'done':''}" onclick="toggleExerciseStep(1)"></div>
+      </div>
+      <div class="step ${todaySteps[2]?'done':''}">
+        <div class="step-num">3</div>
+        <div class="step-content"><div class="step-title">${s3.t}</div><div class="step-desc">${s3.d}</div></div>
+        <div class="step-check ${todaySteps[2]?'done':''}" onclick="toggleExerciseStep(2)"></div>
+      </div>
+    </div>
+    ${isDone?'<div class="today-item done" style="margin-top:8px;"><div class="dot"></div><span>✅ 今日运动已完成</span></div>':'<div class="today-item empty" style="margin-top:8px;">三步全勾选 = 自动标记完成</div>'}
+  `;
+}
+
+function toggleExerciseStep(i) {
+  const today = todayKey();
+  if (!data.exerciseSteps) data.exerciseSteps = {};
+  if (!data.exerciseSteps[today]) data.exerciseSteps[today] = [false, false, false];
+  data.exerciseSteps[today][i] = !data.exerciseSteps[today][i];
+  if (data.exerciseSteps[today].every(x => x)) {
+    data.exercise.calendar[today] = true;
+  } else {
+    delete data.exercise.calendar[today];
+  }
+  saveData();
+  renderExercise();
+  renderDashboard();
+}
+
+function syncAllToTodo() {
+  const today = todayKey();
+  if (window._syncedToday === today) return;
+  
+  const syncItems = [];
+  const en = ENGLISH_SCHEDULE[dayOfWeek()];
+  if (en && en.type && en.type.indexOf('休息') === -1) {
+    syncItems.push({text: '📚 英语 15min（听力+跟读+一句话）', cat: 'study'});
+  }
+  
+  const mp = getMathScheduleToday();
+  if (mp && mp.notStarted) {
+    syncItems.push({text: '📐 数学：准备教材（明天启动）', cat: 'study'});
+  } else if (mp && mp.type === 'buffer') {
+    syncItems.push({text: '📐 数学：缓冲复习（补练习+错题+笔记）', cat: 'study'});
+  } else if (mp && mp.type === 'live') {
+    syncItems.push({text: '📐 数学：' + mp.lesson + '（直播回放）', cat: 'study'});
+  } else if (mp) {
+    syncItems.push({text: '📐 数学：' + mp.lesson + ' (' + mp.level + ') ' + mp.hours, cat: 'study'});
+  }
+  
+  if (new Date().getDay() !== 0) {
+    syncItems.push({text: '💪 芭杆运动（热身+跟练+拉伸，每周3次）', cat: 'life'});
+  }
+  
+  const readDone = data.reading && data.reading.todayDone && data.reading.todayDone[today];
+  if (!readDone) {
+    syncItems.push({text: '📖 阅读 15-20min（每周2-3次）', cat: 'study'});
+  }
+  
+  data.todos = data.todos.filter(t => t.date === today || !t.synced);
+  syncItems.forEach(item => {
+    const exists = data.todos.some(t => t.text === item.text && t.date === today);
+    if (!exists) {
+      data.todos.push({id: Date.now() + Math.random(), text: item.text, category: item.cat, done: false, date: today, synced: true});
+    }
+  });
+  
+  window._syncedToday = today;
+  saveData();
+}
+
+function renderReading() {
+  renderCurrentBook();
+  updateReadStreak();
+  document.getElementById('readStreak').textContent = data.reading.streak;
+  document.getElementById('readTotal').textContent = data.reading.total;
+  document.getElementById('readFinished').textContent = data.reading.finished.length;
+
+  const todayDone = data.reading.todayDone[todayKey()];
+  document.getElementById('readDot').style.background = todayDone ? 'var(--primary)' : 'var(--text-muted)';
+  document.getElementById('readTodayText').textContent = todayDone ? '今天已阅读 ✓' : '今天阅读 15-20 分钟';
+
+  const history = data.reading.notes.slice(-5).reverse();
+  document.getElementById('readNoteHistory').innerHTML = history.length > 0
+    ? '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">最近笔记：</div>' +
+      history.map(n => `<div class="note-item"><div class="note-date">${n.date}</div>${n.text}</div>`).join('')
+    : '';
+
+  // 书目完成状态
+  document.querySelectorAll('.book-card').forEach((card, i) => {
+    card.style.opacity = data.reading.finished.includes(i) ? '0.6' : '1';
+    card.style.borderLeft = data.reading.finished.includes(i) ? '3px solid var(--success)' : '';
+  });
+}
+
+function toggleReadToday() {
+  const today = todayKey();
+  data.reading.todayDone[today] = !data.reading.todayDone[today];
+  if (data.reading.todayDone[today]) {
+    data.reading.calendar = data.reading.calendar || {};
+    data.reading.calendar[today] = true;
+  } else {
+    delete (data.reading.calendar || {})[today];
+  }
+  saveData();
+  renderReading();
+  renderDashboard();
+}
+
+function toggleBookFinished(i) {
+  const idx = data.reading.finished.indexOf(i);
+  if (idx >= 0) data.reading.finished.splice(idx, 1);
+  else data.reading.finished.push(i);
+  saveData();
+  renderReading();
+}
+
+function updateReadStreak() {
+  data.reading.calendar = data.reading.calendar || {};
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (data.reading.calendar[key]) { streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  data.reading.streak = streak;
+  data.reading.total = Object.keys(data.reading.calendar).length;
+}
+
+function saveReadNote() {
+  const text = document.getElementById('readNote').value.trim();
+  const today = todayKey();
+  const idx = data.reading.notes.findIndex(n => n.date === today);
+  if (text) {
+    if (idx >= 0) data.reading.notes[idx].text = text;
+    else data.reading.notes.push({ date: today, text: text });
+  } else if (idx >= 0) {
+    data.reading.notes.splice(idx, 1);
+  }
+  saveData();
+  renderReading();
+}
+
+// ============ 复盘 ============
+function renderReview() {
+  const today = todayKey();
+  const r = data.review[today] || {};
+  document.getElementById('reviewFeeling').value = r.feeling || '';
+  document.getElementById('reviewImprove').value = r.improve || '';
+  document.getElementById('reviewDeep').value = r.deep || '';
+
+  // 心情选中态
+  document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mood === r.mood);
+  });
+
+  // 今日深度问题（按星期轮换）
+  document.getElementById('deepQuestion').textContent = getDeepQuestion(new Date().getDay());
+
+  // 习惯状态
+  document.querySelectorAll('.habit-btn').forEach(btn => {
+    const habit = btn.dataset.habit;
+    const val = parseInt(btn.dataset.val);
+    btn.classList.toggle('active', (r.habits || {})[habit] === val);
+  });
+
+  // 本周复盘墙（仅周末）
+  renderWeekWall();
+}
+
+function getDeepQuestion(day) {
+  const Q = {
+    1: '🎯 这周我最想搞定的一件事是什么？为什么它重要？',
+    2: '✨ 今天哪个瞬间效率最高/最有成就感？怎么复现？',
+    3: '🤔 今天卡住我的难题是什么？卡在哪？明天怎么破？',
+    4: '📊 这周过去一半，离周一定的事还差多远？要调整吗？',
+    5: '💡 这周学到的一个新东西 / 一个感悟',
+    6: '🔍 翻看本周前几天的复盘，我反复在哪个问题上栽？',
+    0: '🛌 这周最让我开心的一件事 + 最累的一件事'
+  };
+  return Q[day] || Q[1];
+}
+
+function setMood(m) {
+  const today = todayKey();
+  if (!data.review[today]) data.review[today] = {};
+  data.review[today].mood = m;
+  saveData();
+  renderReview();
+}
+
+function setHabit(habit, val) {
+  const today = todayKey();
+  if (!data.review[today]) data.review[today] = {};
+  if (!data.review[today].habits) data.review[today].habits = {};
+  data.review[today].habits[habit] = val;
+  saveData();
+  renderReview();
+}
+
+function saveReview() {
+  const today = todayKey();
+  if (!data.review[today]) data.review[today] = {};
+  data.review[today].feeling = document.getElementById('reviewFeeling').value;
+  data.review[today].improve = document.getElementById('reviewImprove').value;
+  data.review[today].deep = document.getElementById('reviewDeep').value;
+  saveData();
+}
+
+// 返回本周一到周日的日期 key 数组
+function getWeekDates() {
+  const d = new Date();
+  const day = d.getDay(); // 0周日 1周一
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const x = new Date(monday);
+    x.setDate(monday.getDate() + i);
+    dates.push(`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`);
+  }
+  return dates;
+}
+
+function renderWeekWall() {
+  const wall = document.getElementById('weekReviewWall');
+  const day = new Date().getDay();
+  if (day !== 6 && day !== 0) { wall.innerHTML = ''; return; }
+
+  const dates = getWeekDates();
+  const weekReviews = dates.map(d => ({date: d, r: data.review[d] || {}}));
+
+  // 关键词云
+  const kwCount = {};
+  weekReviews.forEach(w => {
+    if (!w.r.feeling) return;
+    const words = w.r.feeling.split(/[\/\s,，、;；]+/).filter(s => s.trim());
+    words.forEach(wd => { const k = wd.trim(); if (k) kwCount[k] = (kwCount[k]||0) + 1; });
+  });
+  const topKw = Object.entries(kwCount).sort((a,b) => b[1]-a[1]).slice(0, 12);
+
+  // 习惯完成率
+  const habits = ['english', 'exercise', 'reading', 'math'];
+  const habitNames = {english:'📚 英语', exercise:'💪 运动', reading:'📖 阅读', math:'📐 数学'};
+  const habitRates = habits.map(h => {
+    let done = 0;
+    weekReviews.forEach(w => { if ((w.r.habits||{})[h] === 2) done++; });
+    return {name: habitNames[h], rate: Math.round(done/7*100)};
+  });
+
+  // 深度复盘摘录
+  const excerpts = weekReviews.filter(w => w.r.deep && w.r.deep.trim()).map(w => ({date: w.date, deep: w.r.deep}));
+
+  wall.innerHTML = `
+    <div class="week-wall">
+      <h3>📊 本周复盘墙</h3>
+      <div class="sub-title">高频关键词</div>
+      ${topKw.length > 0 ? topKw.map(k => `<span class="kw-tag">${k[0]}${k[1]>1?' ×'+k[1]:''}</span>`).join('') : '<div style="font-size:12px;color:var(--text-light);">本周还没有关键词记录</div>'}
+
+      <div class="sub-title">习惯完成率（完成=2 的天数 / 7）</div>
+      ${habitRates.map(h => `
+        <div class="habit-rate-row">
+          <div class="name">${h.name}</div>
+          <div class="habit-rate-bar"><div class="habit-rate-fill" style="width:${h.rate}%;"></div></div>
+          <div class="pct">${h.rate}%</div>
+        </div>
+      `).join('')}
+
+      <div class="sub-title">本周深度复盘摘录（${excerpts.length} 篇）</div>
+      ${excerpts.length > 0 ? excerpts.map(e => `<div class="deep-excerpt"><span class="d">${e.date}</span>${e.deep.substring(0,120)}${e.deep.length>120?'...':''}</div>`).join('') : '<div style="font-size:12px;color:var(--text-light);">本周还没有深度复盘，趁周末补一篇</div>'}
+    </div>
+  `;
+}
+
+// 把当前页面完整 HTML 下载为本地文件（离线永久可用）
+function downloadAsApp() {
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], {type: 'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '我的工作台.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  alert('✅ 正在下载「我的工作台.html」\n\n下载完成后：\n1. 打开夸克 → 底部「下载」图标 → 找到「我的工作台.html」\n2. 直接点它，夸克会打开，能打勾能交互\n3. 然后点夸克菜单「添加到主屏幕」\n\n这样桌面图标就指向本地文件，永久不失效。');
+}
+
+// ============ 数据备份 ============
+function exportData() {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'workbench-backup-' + todayKey() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  data.lastBackup = todayKey();
+  saveData();
+  hideBackupBar();
+  alert('✅ 已导出备份文件\n请到 Safari 下载列表 / iPad「文件」App 的"下载"文件夹查看。\n文件名：' + a.download);
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json,application/json';
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (!confirm('导入会覆盖当前所有数据，确定吗？\n\n建议先导出当前数据做备份。')) return;
+        data = imported;
+        saveData();
+        renderDashboard();
+        renderPage('dashboard');
+        alert('✅ 导入成功');
+      } catch (err) {
+        alert('❌ 导入失败：文件格式错误');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function checkBackupReminder() {
+  const now = new Date();
+  const hour = now.getHours();
+  const today = todayKey();
+  if (hour >= 22 && data.lastBackup !== today) {
+    showBackupBar();
+  }
+}
+
+function showBackupBar() { document.getElementById('backupBar').classList.add('show'); }
+function hideBackupBar() { document.getElementById('backupBar').classList.remove('show'); }
+function dismissBackupBar() {
+  data.lastBackup = todayKey();
+  saveData();
+  hideBackupBar();
+}
+
+// ============ 仪表盘 ============
+function renderDashboard() {
+  syncAllToTodo();
+  updateEnglishStreak();
+  updateExerciseStreak();
+  updateReadStreak();
+
+  document.getElementById('statEnglish').textContent = data.english.streak;
+  document.getElementById('statExercise').textContent = data.exercise.streak;
+  document.getElementById('statReading').textContent = data.reading.streak;
+
+  // 本周完成率
+  const d = new Date();
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1));
+  let weekDone = 0, weekTotal = 0;
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    const key = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    if (i < 6) { // 周一到周六
+      weekTotal++;
+      if (data.english.calendar[key] || data.exercise.calendar[key]) weekDone++;
+    }
+  }
+  const rate = weekTotal > 0 ? Math.round(weekDone / weekTotal * 100) : 0;
+  document.getElementById('statWeekRate').textContent = rate + '%';
+
+  // 今日英语
+  const dow = dayOfWeek();
+  const sch = ENGLISH_SCHEDULE[dow];
+  const englishDone = data.english.calendar[todayKey()];
+  document.getElementById('dashEnglishToday').innerHTML = englishDone
+    ? '<div class="today-item done"><div class="dot"></div><span>今日英语已完成 ✓</span></div>'
+    : `<div class="today-item"><div class="dot"></div><span>${sch.type}</span></div>
+       <div class="today-item empty">15 分钟 · 听力+跟读+一句话</div>`;
+
+  // 今日运动
+  const exDone = data.exercise.calendar[todayKey()];
+  const phase = data.exercise.phase || 1;
+  document.getElementById('dashExerciseToday').innerHTML = exDone
+    ? '<div class="today-item done"><div class="dot"></div><span>今日运动已完成 ✓</span></div>'
+    : `<div class="today-item"><div class="dot"></div><span>${EXERCISE_PHASES[phase].name}</span></div>
+       <div class="today-item empty">${EXERCISE_PHASES[phase].duration}</div>`;
+
+  // 今日数学
+  const target = getMathTodayTarget();
+  const dashMath = document.getElementById('dashMathToday');
+  if (!target) {
+    dashMath.innerHTML = '<div class="today-item done"><div class="dot"></div><span>7-8月数学已追平 ✓</span></div>';
+  } else if (target.notStarted) {
+    dashMath.innerHTML = `<div class="today-item" onclick="switchPage('math')" style="cursor:pointer;"><div class="dot" style="background:#81c784;"></div><span>🟢 7/26 启动：${target.lesson}</span></div>
+      <div class="today-item empty">明天正式开始，今天准备教材</div>`;
+  } else {
+    const isOverdue = target.date < todayKey();
+    const isDone = target.lessonId && data.math[target.lessonId];
+    dashMath.innerHTML = `<div class="today-item ${isDone?'done':''}" onclick="switchPage('math')" style="cursor:pointer;"><div class="dot"></div><span>${isOverdue?'⚠️ 补追':'🎯 今日'}：${target.lesson}</span></div>`;
+  }
+
+  // 今日待办
+  const todayTodos = data.todos.filter(t => t.date === todayKey());
+  const dashTodo = document.getElementById('dashTodoList');
+  if (todayTodos.length === 0) {
+    dashTodo.innerHTML = '<div class="today-item empty">今天没有待办</div>';
+  } else {
+    dashTodo.innerHTML = todayTodos.map(t => `
+      <div class="today-item ${t.done?'done':''}" onclick="toggleTodo(${t.id})" style="cursor:pointer;">
+        <div class="dot"></div>
+        <span>${t.text}</span>
+      </div>
+    `).join('');
+  }
+}
+
+// ============ 页面渲染路由 ============
+function renderPage(page) {
+  switch(page) {
+    case 'dashboard': renderDashboard(); break;
+    case 'todo': renderTodos(); break;
+    case 'english': renderEnglish(); break;
+    case 'exercise': renderExercise(); break;
+    case 'reading': renderReading(); break;
+    case 'review': renderReview(); break;
+    case 'math': renderMath(); break;
+  }
+}
+
+// ============ 初始化 ============
+initDate();
+renderDashboard();
+checkBackupReminder();
+
+// 每分钟更新一次时间显示 + 检查备份提醒
+setInterval(() => {
+  initDate();
+  renderDashboard();
+  checkBackupReminder();
+}, 60000);
+</script>
+
+<!-- 备份提醒条 -->
+<div class="backup-bar" id="backupBar">
+  <span>🌙 今天的复盘还没备份，建议导出一份存到「文件」App</span>
+  <div>
+    <button onclick="exportData()">立即备份</button>
+    <button class="close-x" onclick="dismissBackupBar()">×</button>
+  </div>
+</div>
+
+
+
+</body></html>
