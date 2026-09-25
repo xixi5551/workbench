@@ -118,6 +118,10 @@ input#wt {
 }
 .sleeprow { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
 .sdot { font-size:11px; color:var(--text-muted); }
+.prow { display:flex; align-items:center; gap:7px; padding:6px 2px; border-bottom:1px dashed var(--border); font-size:12.5px; }
+.prow:last-child { border-bottom:0; }
+.prow .pn { font-weight:600; flex:none; }
+.prow .pv { color:var(--text-muted); font-size:11px; flex:1; text-align:right; }
 </style>
 </head>
 <body>
@@ -152,7 +156,7 @@ input#wt {
 <script>
 'use strict';
 /* ================= 基础 ================= */
-const KEY='workbench_v4', V=5;
+const KEY='workbench_v4', V=6;
 const WD=['周日','周一','周二','周三','周四','周五','周六'];
 const DSTR=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -172,15 +176,15 @@ const SCHOOL=['早读大声跟读15分钟','课堂圈生词，下课进词表','
 
 /* 冲刺计划：9/25 中秋 ~ 10/7 考前一天 */
 const SPRINT={
-'2026-09-25':{tag:'中秋 D1 · 全天在家',items:[{s:'math',t:'阿不 06 函数概念 + 07 习题课（3h）'},{s:'physics',t:'夏梦迪零基础 第1讲（3h）'},{s:'english',t:'单词带背 40min'}]},
-'2026-09-26':{tag:'中秋 D2 · 全天在家',items:[{s:'math',t:'阿不 08~09 单调性（3h）'},{s:'chem',t:'超人0轮 视频①②③（4.5h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-09-25':{tag:'中秋 D1 · 全天在家',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（3h，中秋D1）'},{s:'physics',t:'夏梦迪零基础 第1讲（3h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-09-26':{tag:'中秋 D2 · 全天在家',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（3h）'},{s:'chem',t:'超人0轮 视频①②③（4.5h）'},{s:'english',t:'单词带背 40min'}]},
 '2026-09-27':{tag:'中秋 D3 · 全天在家',items:[{s:'physics',t:'夏梦迪零基础 第2、3讲（6h）'},{s:'bio',t:'生物 第1、2节（2h）'},{s:'math',t:'数学本周错题整理（30min）'},{s:'english',t:'单词带背 40min'}]},
-'2026-09-28':{tag:'返校 · 物理晚自习',items:[{s:'math',t:'阿不 10~11 奇偶性（2h）'},{s:'physics',t:'整理零基础①笔记+错题（1h）'},{s:'english',t:'单词带背 40min'}]},
-'2026-09-29':{tag:'返校 · 化学晚自习',items:[{s:'math',t:'阿不 12 对称性 + 13 周期性（2h）'},{s:'chem',t:'超人0轮 视频④（1h）'},{s:'english',t:'单词带背 40min'}]},
-'2026-09-30':{tag:'返校 · 物理晚自习',items:[{s:'math',t:'阿不 15~16 指数函数（2h）'},{s:'physics',t:'零基础②③笔记整理+预习受力（1h）'},{s:'english',t:'单词带背 40min'}]},
-'2026-10-01':{tag:'国庆 D1 · 全天在家',items:[{s:'math',t:'阿不 17 三角定义 + 18 图像性质①（3.5h）'},{s:'physics',t:'夏梦迪零基础 第4讲（3h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-09-28':{tag:'返校 · 物理晚自习',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（2h）'},{s:'physics',t:'整理零基础①笔记+错题（1h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-09-29':{tag:'返校 · 化学晚自习',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（2h）'},{s:'chem',t:'超人0轮 视频④（1h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-09-30':{tag:'返校 · 物理晚自习',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（2h）'},{s:'physics',t:'零基础②③笔记整理+预习受力（1h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-10-01':{tag:'国庆 D1 · 全天在家',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（3.5h）'},{s:'physics',t:'夏梦迪零基础 第4讲（3h）'},{s:'english',t:'单词带背 40min'}]},
 '2026-10-02':{tag:'国庆 D2 · 全天在家',items:[{s:'chem',t:'超人0轮 视频⑤⑥⑦（4.5h）'},{s:'bio',t:'生物 第3、4节（2h）'},{s:'english',t:'单词带背 40min'}]},
-'2026-10-03':{tag:'国庆 D3 · 全天在家',items:[{s:'math',t:'阿不 19 图像性质② + 20 周测（3h）'},{s:'physics',t:'夏梦迪零基础 第5讲（3h）'},{s:'english',t:'单词带背 40min'}]},
+'2026-10-03':{tag:'国庆 D3 · 全天在家',items:[{s:'math',t:'数学一轮 · 按配速追 2 讲（3h）'},{s:'physics',t:'夏梦迪零基础 第5讲（3h）'},{s:'english',t:'单词带背 40min'}]},
 '2026-10-04':{tag:'国庆 D4 · 全天在家',items:[{s:'chem',t:'超人0轮 视频⑧⑨（3h）'},{s:'bio',t:'生物 第5节（1h）'},{s:'math',t:'收割模块①集合逻辑 + ②复数（2.5h）'},{s:'english',t:'单词带背 40min'}]},
 '2026-10-05':{tag:'国庆 D5 · 全天在家',items:[{s:'math',t:'收割模块③基本不等式 + ④向量（3h）'},{s:'physics',t:'夏梦迪零基础 第6讲（3h）'},{s:'english',t:'单词带背 40min'}]},
 '2026-10-06':{tag:'月考冲刺 · 全天在家',items:[{s:'math',t:'收割模块⑤数列 + ⑥函数性质（3h）'},{s:'chem',t:'超人0轮 视频⑩⑪（2.5h）'},{s:'english',t:'单词带背 40min'}]},
@@ -200,25 +204,138 @@ const THEME={
 
 /* ================= 状态 ================= */
 function def(){
-  const m1=Array(72).fill(false); m1[0]=m1[1]=m1[2]=m1[3]=m1[4]=true;
-  return {version:V, start:'2026-09-25', blocks:{}, sleep:{}, weight:{},
+  const m1=Array(72).fill(false); m1[0]=m1[1]=m1[2]=true;
+  return {version:V, start:'2026-09-25', blocks:{}, sleep:{}, weight:{}, snap:{},
     m1:m1, m2:Array(23).fill(false), m3:Array(20).fill(false),
     sp:Array(18).fill(false), hv:Array(6).fill(false),
     pz:Array(10).fill(false), pm:Array(49).fill(false),
     cz:Array(42).fill(false), cm:Array(14).fill(false),
-    bio:Array(43).fill(false), gr:Array(17).fill(false), sc:Array(4).fill(false)};
+    bio:Array(43).fill(false), gr:Array(17).fill(false), wd:Array(35).fill(false), sc:Array(4).fill(false)};
 }
 let data;
 try {
   data=JSON.parse(localStorage.getItem(KEY)||'null');
-  if(data&&data.version===4){
-    const m1=Array(72).fill(false); m1[0]=m1[1]=m1[2]=m1[3]=m1[4]=true;
-    data.m1=m1; data.m2=Array(23).fill(false); data.m3=Array(20).fill(false); delete data.m; data.version=V;
+  if(data&&data.version<6){
+    data.m1=Array(72).fill(false); data.m1[0]=data.m1[1]=data.m1[2]=true;
+    if(!data.m2||data.m2.length!==23) data.m2=Array(23).fill(false);
+    if(!data.m3||data.m3.length!==20) data.m3=Array(20).fill(false);
+    delete data.m;
+    if(!data.wd||data.wd.length!==35) data.wd=Array(35).fill(false);
+    data.snap={}; data.version=V;
   }
   if(!data||data.version!==V) data=def();
 } catch(e){ data=def(); }
 const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(data)); }catch(e){} };
 const blk=()=>{ const t=DSTR(); if(!data.blocks[t]) data.blocks[t]={done:[]}; return data.blocks[t]; };
+
+/* ================= 配速引擎：活的系统 =================
+   周为最小单位滚动：每周应清多少 = 剩余 ÷ 距截止周数，周一自动重算；
+   落后自动加量、超前自动放松；没清完的单位不跳过，永远从第一个未完成处接着算。 */
+const TRACKS={
+  m1:{name:'数学一轮',key:'m1',dl:'2027-02-21',u:'讲'},
+  hv:{name:'月考收割',key:'hv',dl:'2026-10-07',u:'个'},
+  cz:{name:'化学0轮',key:'cz',dl:'2026-10-31',u:'个'},
+  pz:{name:'物理零基础',key:'pz',dl:'2026-11-01',u:'讲'},
+  sp:{name:'寒假速通',key:'sp',dl:'2027-02-21',go:'2027-01-25',u:'天'},
+  m2:{name:'数学二轮',key:'m2',dl:'2027-04-04',go:'2026-12-26',u:'讲'},
+  m3:{name:'数学三轮',key:'m3',dl:'2027-06-06',go:'2027-03-16',u:'讲'},
+  pm:{name:'物理正课',key:'pm',dl:'2027-02-07',u:'讲'},
+  cm:{name:'化学一轮',key:'cm',dl:'2027-02-07',u:'章'},
+  bio:{name:'生物',key:'bio',dl:'2027-02-07',u:'节'},
+  gr:{name:'英语语法',key:'gr',dl:'2027-01-31',u:'节'},
+  wd:{name:'3500词',key:'wd',dl:'2027-01-31',u:'组'}
+};
+const P2PAGE={m1:'math',hv:'math',sp:'math',m2:'math',m3:'math',pz:'physics',pm:'physics',cz:'chem',cm:'chem',bio:'bio',gr:'english',wd:'english'};
+function unitName(k,i){
+  if(k==='m1') return i<38?String(i+1).padStart(2,'0')+' '+M1_LABELS[i]:String(i+1).padStart(2,'0');
+  if(k==='hv') return HARVEST[i];
+  if(k==='sp') return SPEED18[i];
+  if(k==='cm') return (i+1)+' '+CHEM_MAIN14[i];
+  if(k==='gr') return GRAMMAR[i];
+  if(k==='wd') return '第'+(i+1)+'组 · 100词';
+  return String(i+1).padStart(2,'0');
+}
+const nextIdx=k=>{ const arr=data[TRACKS[k].key]; for(let i=0;i<arr.length;i++) if(!arr[i]) return i; return -1; };
+const mondayStr=()=>{ const d=new Date(); d.setDate(d.getDate()-((d.getDay()+6)%7)); return fmt(d); };
+function snapVal(wk,k){ return (data.snap[wk]&&data.snap[wk][k]!=null)?data.snap[wk][k]:null; }
+function ensureSnap(){
+  const wk=mondayStr();
+  if(!data.snap[wk]){
+    const s={};
+    for(const k in TRACKS) s[k]=data[TRACKS[k].key].filter(Boolean).length;
+    data.snap[wk]=s; save();
+  }
+}
+function pace(k){
+  const tr=TRACKS[k], arr=data[tr.key];
+  const total=arr.length, done=arr.filter(Boolean).length, remain=total-done;
+  const dl=daysTo(tr.dl), days=Math.max(1,dl+1), weeks=Math.max(1,Math.ceil(days/7));
+  const perWeek=Math.ceil(remain/weeks), perDay=remain/days;
+  const elapsed=Math.max(1,Math.round((new Date(new Date().toDateString())-new Date(mondayStr()+'T00:00:00'))/86400000)+1);
+  const base=snapVal(mondayStr(),k);
+  const done7=base==null?0:Math.max(0,done-base);
+  const behind=+(perDay*elapsed-done7).toFixed(1);
+  const run=!tr.go||DSTR()>=tr.go;
+  const expired=dl<0&&remain>0;
+  return {tr:tr,total:total,done:done,remain:remain,dl:dl,days:days,perWeek:perWeek,done7:done7,behind:behind,run:run,expired:expired};
+}
+function paceLine(k){
+  const p=pace(k);
+  if(!p.run) return '待开跑（'+p.tr.go.replace(/-/g,'/')+' 起），开跑后按截止日自动配速';
+  if(p.remain<=0) return '已全部清完';
+  if(p.expired) return '已过截止日，剩 '+p.remain+' '+p.tr.u+'——需要重排截止日';
+  let s='当前：'+unitName(k,nextIdx(k))+' · 剩 '+p.remain+' '+p.tr.u+' · 距截止 '+p.dl+' 天 → 每周清 '+p.perWeek+' '+p.tr.u;
+  if(p.done7>0) s+='（本周已清 '+p.done7+'）';
+  if(p.behind>=0.5) s+=' · 落后约'+Math.ceil(p.behind)+p.tr.u+'，本周内补上';
+  else if(p.behind<=-0.5) s+=' · 超前，配速自动放松';
+  return s;
+}
+function paceRows(){
+  let h='';
+  for(const k in TRACKS){
+    const p=pace(k);
+    if(p.remain<=0) continue;
+    let st;
+    if(!p.run) st='<span class="mut">'+p.tr.go.slice(5)+' 开跑</span>';
+    else if(p.expired) st='<span class="mut">需重排</span>';
+    else if(p.behind>=0.5) st='<b style="color:var(--danger)">落后'+Math.ceil(p.behind)+p.tr.u+'</b>';
+    else if(p.behind<=-0.5) st='<b style="color:var(--success)">超前</b>';
+    else st='<span class="mut">正常</span>';
+    h+='<div class="prow" data-act="nav" data-p="'+P2PAGE[k]+'"><span class="pn">'+p.tr.name+'</span><span class="pv">剩 '+p.remain+' '+p.tr.u+' · 周'+p.perWeek+'</span>'+st+'</div>';
+  }
+  return h||'<div class="sub">所有轨道清完！</div>';
+}
+function paceBanner(){
+  const warns=[];
+  for(const k in TRACKS){ const p=pace(k); if(p.run&&!p.expired&&p.remain>0&&p.behind>=0.5) warns.push(k); }
+  if(!warns.length) return '<div class="tip green" style="margin-top:0"><b>配速正常。</b>把「本周硬任务」清完就稳了，继续保持。</div>';
+  const names=warns.map(k=>TRACKS[k].name+' 落后约'+Math.ceil(pace(k).behind)+TRACKS[k].u).join(' · ');
+  return '<div class="tip red" style="margin-top:0"><b>落后警示：</b>'+names+'。没完成的不跳过——今天欠的明天接着算，本周内补上就回到正轨。</div>';
+}
+function weekBoard(){
+  let h='', any=false;
+  for(const k in TRACKS){
+    const p=pace(k);
+    if(!p.run||p.remain<=0) continue;
+    const start=nextIdx(k);
+    const need=Math.max(0,p.perWeek-Math.max(0,p.done7));
+    if(need<=0||start<0) continue;
+    any=true;
+    h+='<div class="lbl">'+p.tr.name+' · 本周待清 '+need+' '+p.tr.u+'</div><div class="chips" style="margin:5px 0 4px">';
+    for(let j=0;j<need&&start+j<p.total;j++) h+=chip(k,start+j,unitName(k,start+j)).replace('data-act="chip"','data-act="chip" data-w="1"');
+    h+='</div>';
+  }
+  return any?h:'<div class="sub">本周配速内任务已清完，超前部分都是赚的。想加量就去科目页往前追。</div>';
+}
+function updatePace(){
+  const ids={pl_m1:'m1',pl_hv:'hv',pl_sp:'sp',pl_m2:'m2',pl_m3:'m3',pl_pz:'pz',pl_pm:'pm',pl_cz:'cz',pl_cm:'cm',pl_bio:'bio',pl_gr:'gr',pl_wd:'wd'};
+  for(const id in ids){ const el=$(id); if(el) el.innerHTML=paceLine(ids[id]); }
+  if($('pace_rows')) $('pace_rows').innerHTML=paceRows();
+  if($('pace_banner')) $('pace_banner').innerHTML=paceBanner();
+  if($('week_board')) $('week_board').innerHTML=weekBoard();
+  const hm=$('h_m1');
+  if(hm){ const n=nextIdx('m1'); hm.textContent='① 一轮 72 讲 · '+(n<0?'已全部清完':'当前追到第 '+String(n+1).padStart(2,'0')+' 讲'+(n<38?' · '+M1_LABELS[n]:'')); }
+}
 
 /* ================= 通用渲染 ================= */
 const chip=(k,i,txt,cls)=>'<div class="chip '+(data[k][i]?'on ':'')+(cls||'')+'" data-act="chip" data-k="'+k+'" data-i="'+i+'">'+txt+'</div>';
@@ -228,13 +345,13 @@ const numChips=(k,from,to,pad)=>{ let s=''; for(let i=from;i<=to;i++) s+=chip(k,
 
 function renderMath(){
   let h='<div class="card"><h2>数学 · 阿不全程班</h2>'
-    +'<div class="lbl">一轮 72 讲（目标 2/21 寒假结束）</div><div class="bar"><i id="b_m1" style="background:var(--blue)"></i></div><div class="sub" id="b_m1_t"></div>'
-    +'<div class="lbl">月考收割 6 模块</div><div class="bar"><i id="b_hv" style="background:var(--danger)"></i></div><div class="sub" id="b_hv_t"></div>'
-    +'<div class="lbl">寒假速通 18 天</div><div class="bar"><i id="b_sp" style="background:var(--orange)"></i></div><div class="sub" id="b_sp_t"></div>'
-    +'<div class="lbl">二轮 23 讲（12/26 开播）</div><div class="bar"><i id="b_m2" style="background:var(--purple)"></i></div><div class="sub" id="b_m2_t"></div>'
-    +'<div class="lbl">三轮 20 讲（3/16 开播）</div><div class="bar"><i id="b_m3" style="background:var(--teal)"></i></div><div class="sub" id="b_m3_t"></div></div>';
-  h+='<div class="card"><h3>① 一轮 72 讲 · 当前追到第 6 讲</h3>'
-    +'<div class="sub">直播 8~11 点你赶不上，全部按录播追，每周 3 讲左右。阿不直播 12/24 收口一轮，我们放宽到 2/21（寒假结束），差的进度用假期补。</div>';
+    +'<div class="lbl">一轮 72 讲（目标 2/21 寒假结束）</div><div class="bar"><i id="b_m1" style="background:var(--blue)"></i></div><div class="sub" id="b_m1_t"></div><div class="sub" id="pl_m1" style="color:var(--blue)"></div>'
+    +'<div class="lbl">月考收割 6 模块</div><div class="bar"><i id="b_hv" style="background:var(--danger)"></i></div><div class="sub" id="b_hv_t"></div><div class="sub" id="pl_hv" style="color:var(--danger)"></div>'
+    +'<div class="lbl">寒假速通 18 天</div><div class="bar"><i id="b_sp" style="background:var(--orange)"></i></div><div class="sub" id="b_sp_t"></div><div class="sub" id="pl_sp" style="color:var(--orange)"></div>'
+    +'<div class="lbl">二轮 23 讲（12/26 开播）</div><div class="bar"><i id="b_m2" style="background:var(--purple)"></i></div><div class="sub" id="b_m2_t"></div><div class="sub" id="pl_m2" style="color:var(--purple)"></div>'
+    +'<div class="lbl">三轮 20 讲（3/16 开播）</div><div class="bar"><i id="b_m3" style="background:var(--teal)"></i></div><div class="sub" id="b_m3_t"></div><div class="sub" id="pl_m3" style="color:var(--teal)"></div></div>';
+  h+='<div class="card"><h3 id="h_m1">① 一轮 72 讲</h3>'
+    +'<div class="sub">直播 8~11 点你赶不上，全部按录播追。阿不直播 12/24 收口一轮，我们放宽到 2/21（寒假结束）；每周追几讲由配速自动算，落后自动加量，差的进度用假期补。</div>';
   let off=0;
   M1_G.forEach(g=>{
     h+='<h3 class="lbl" style="margin-top:10px">'+g[0]+'（'+(off+1)+'-'+(off+g[1])+'讲）</h3><div class="chips" style="margin-top:4px">';
@@ -263,9 +380,9 @@ function renderMath(){
 
 function renderPhysics(){
   let h='<div class="card"><h2>物理 · 夏梦迪</h2>'
-    +'<div class="lbl">零基础班（10 讲 × ~3h）</div><div class="bar"><i id="b_pz" style="background:var(--purple)"></i></div><div class="sub" id="b_pz_t"></div>'
-    +'<div class="lbl">全年正课 · 上学期（49 讲）</div><div class="bar"><i id="b_pm" style="background:var(--purple)"></i></div><div class="sub" id="b_pm_t"></div>'
-    +'<div class="sub" style="margin-top:8px">节奏：约 8h/周 → 零基础 11 月初学完，正课 2 月初收尾。</div></div>';
+    +'<div class="lbl">零基础班（10 讲 × ~3h）</div><div class="bar"><i id="b_pz" style="background:var(--purple)"></i></div><div class="sub" id="b_pz_t"></div><div class="sub" id="pl_pz" style="color:var(--purple)"></div>'
+    +'<div class="lbl">全年正课 · 上学期（49 讲）</div><div class="bar"><i id="b_pm" style="background:var(--purple)"></i></div><div class="sub" id="b_pm_t"></div><div class="sub" id="pl_pm" style="color:var(--purple)"></div>'
+    +'<div class="sub" style="margin-top:8px">每周几讲由配速自动算：零基础 11/1 前清完，正课 2 月初收尾；落后自动加量。</div></div>';
   h+='<div class="card"><h3>① 零基础班 · 10 讲</h3><div class="sub">先把地基打牢再上正课，讲慢、讲透，适合现在的你。</div><div class="chips" style="margin-top:8px">';
   for(let i=0;i<10;i++) h+=chip('pz',i,'第'+(i+1)+'讲');
   h+='</div></div>';
@@ -282,9 +399,9 @@ function renderPhysics(){
 
 function renderChem(){
   let h='<div class="card"><h2>化学 · 超人</h2>'
-    +'<div class="lbl">0 轮筑基（42 个视频）</div><div class="bar"><i id="b_cz" style="background:var(--green)"></i></div><div class="sub" id="b_cz_t"></div>'
-    +'<div class="lbl">一轮（14 章 · 待课表细化）</div><div class="bar"><i id="b_cm" style="background:var(--green)"></i></div><div class="sub" id="b_cm_t"></div>'
-    +'<div class="sub" style="margin-top:8px">节奏：约 7h/周 → 0 轮 10 月底清完，一轮 2 月初收尾。</div></div>';
+    +'<div class="lbl">0 轮筑基（42 个视频）</div><div class="bar"><i id="b_cz" style="background:var(--green)"></i></div><div class="sub" id="b_cz_t"></div><div class="sub" id="pl_cz" style="color:var(--green)"></div>'
+    +'<div class="lbl">一轮（14 章 · 待课表细化）</div><div class="bar"><i id="b_cm" style="background:var(--green)"></i></div><div class="sub" id="b_cm_t"></div><div class="sub" id="pl_cm" style="color:var(--green)"></div>'
+    +'<div class="sub" style="margin-top:8px">每周几个视频由配速自动算：0 轮 10/31 前清完，一轮 2 月初收尾；落后自动加量。</div></div>';
   h+='<div class="card"><h3>① 0 轮筑基 · 42 个视频</h3><div class="chips">';
   let off=0;
   CZ_G.forEach(g=>{
@@ -302,7 +419,8 @@ function renderChem(){
 function renderBio(){
   let h='<div class="card"><h2>生物（更新中 · 共 43 节）</h2>'
     +'<div class="bar"><i id="b_bio" style="background:var(--teal)"></i></div><div class="sub" id="b_bio_t"></div>'
-    +'<div class="sub" style="margin-top:8px">节奏：约 5h/周 + 假期加量 → 2 月初收完。生物是背多分，看完一节当天把笔记过一遍再打卡。</div></div>';
+    +'<div class="sub" id="pl_bio" style="color:var(--teal)"></div>'
+    +'<div class="sub" style="margin-top:8px">每周几节由配速自动算，2 月初收完。生物是背多分，看完一节当天把笔记过一遍再打卡。</div></div>';
   h+='<div class="card"><h3>课程清单</h3><div class="chips" style="margin-top:8px">';
   for(let i=0;i<43;i++) h+=chip('bio',i,'第'+(i+1)+'节');
   h+='</div></div>';
@@ -313,16 +431,22 @@ function renderEnglish(){
   let streak=0; const d=new Date();
   while(data.blocks[fmt(d)] && data.blocks[fmt(d)].done.includes('w')){ streak++; d.setDate(d.getDate()-1); }
   let h='<div class="card"><h2>英语</h2>'
-    +'<div class="lbl">语法课（17 节）</div><div class="bar"><i id="b_gr" style="background:var(--orange)"></i></div><div class="sub" id="b_gr_t"></div>'
+    +'<div class="lbl">高考 3500 词（35 组 × 100 词）</div><div class="bar"><i id="b_wd" style="background:var(--blue)"></i></div><div class="sub" id="b_wd_t"></div><div class="sub" id="pl_wd" style="color:var(--blue)"></div>'
+    +'<div class="lbl">语法课（17 节）</div><div class="bar"><i id="b_gr" style="background:var(--orange)"></i></div><div class="sub" id="b_gr_t"></div><div class="sub" id="pl_gr" style="color:var(--orange)"></div>'
     +'<div class="sub" style="margin-top:8px">单词带背 ≤1h/天，在「今日」页打卡。当前连续打卡：<b>'+streak+'</b> 天</div></div>';
   h+='<div class="card"><h3>① 单词带背 · 雷打不动</h3><div class="sub">每天 30~60 分钟，只求连续不求量。带背课跟不完就用当天学的词自测 20 个。</div></div>';
-  h+='<div class="card"><h3>② 语法课 · 17 节</h3><div class="sub">配合作文和长难句，每学完一节当天找 3 个例句套用。</div><div class="chips" style="margin-top:8px">';
+  h+='<div class="card"><h3>② 高考 3500 词 · 35 组，每组 100 词</h3>'
+    +'<div class="sub">以 100 词为一个单位打卡，每周几组由配速自动算（约每天 30 词），1/31 前背完第一轮。觉得一组太大就说，改成 50 词一组（70 组）。</div><div class="chips" style="margin-top:8px">';
+  for(let i=0;i<35;i++) h+=chip('wd',i,'第'+(i+1)+'组');
+  h+='</div></div>';
+  h+='<div class="card"><h3>③ 语法课 · 17 节</h3><div class="sub">配合作文和长难句，每学完一节当天找 3 个例句套用。</div><div class="chips" style="margin-top:8px">';
   for(let i=0;i<17;i++) h+=chip('gr',i,GRAMMAR[i]);
   h+='</div></div>';
-  h+='<div class="card"><h3>③ 学校英语课怎么用</h3><div class="sub">学校进度不和你抢时间，这些小动作白捡分。</div><div class="chips" style="margin-top:8px">';
+  h+='<div class="card"><h3>④ 学校英语课怎么用</h3><div class="sub">学校进度不和你抢时间，这些小动作白捡分。</div><div class="chips" style="margin-top:8px">';
   for(let i=0;i<4;i++) h+=chip('sc',i,SCHOOL[i]);
   h+='</div></div>';
   $('p_english').innerHTML=h;
+  updatePace();
 }
 
 /* ================= 今日页 ================= */
@@ -330,10 +454,15 @@ function renderToday(){
   const t=DSTR(), b=blk(), d=new Date(), wd=d.getDay();
   const def=SPRINT[t]||THEME[wd];
   const pre=SPRINT[t]?'s':'t';
-  let h='<div class="card">';
+  let h='<div id="pace_banner"></div>';
+  h+='<div class="card"><h3 style="margin-top:0">配速总览 <span class="mut" style="font-weight:400;font-size:11px">剩X · 周Y = 还剩X个，每周要清Y个</span></h3><div id="pace_rows"></div>'
+    +'<div class="sub" style="margin-top:7px">每周应清多少 = 剩余 ÷ 距截止周数，每周一自动重算；落后自动加量、超前自动放松。点一行跳到对应科目。</div></div>';
+  h+='<div class="card"><h3 style="margin-top:0">本周硬任务 · 没清完的不跳过</h3><div id="week_board"></div>'
+    +'<div class="sub" style="margin-top:8px">点单位直接打卡，清一个少一个；今天没清完，明天它还排在最前面等着，周内补上就回到正轨。</div></div>';
+  h+='<div class="card">';
   h+='<span class="tag'+(SPRINT[t]?' red':'')+'">'+def.tag+'</span>';
-  h+='<h2>'+(SPRINT[t]?'冲刺作战卡':'今日作战卡')+'</h2>';
-  h+='<div class="sub" style="margin-bottom:8px">每天最多 2~3 科，大块时间推进。学 1.5h 休息 15 分钟，午休 30 分钟。</div>';
+  h+='<h2>'+(SPRINT[t]?'冲刺作战卡':'每日安排')+'</h2>';
+  h+='<div class="sub" style="margin-bottom:8px">时间安排参考（哪天主攻哪科），具体追哪几讲以上方「本周硬任务」为准。学 1.5h 休息 15 分钟，午休 30 分钟。</div>';
   def.items.forEach((it,i)=>{
     const on=b.done.includes(pre+i);
     const nm={math:'数学',physics:'物理',chem:'化学',bio:'生物',english:'英语',review:'复盘'}[it.s]||it.s;
@@ -350,6 +479,7 @@ function renderToday(){
     +'</div>';
   h+='<div class="card"><div class="tip green" style="margin-top:0"><b>三件小事别忘：</b>① 三顿正餐+加餐不能省（BMI 15.1，身体是本钱）② 睡够 7 小时再拼 ③ 周日晚花 10 分钟看「复盘」页。</div></div>';
   $('p_today').innerHTML=h;
+  updatePace();
   bar('t_m',data.m1);
   bar('t_p',data.pz.concat(data.pm));
   bar('t_c',data.cz.concat(data.cm));
@@ -391,7 +521,7 @@ function renderReview(){
     +'<button class="btn" data-act="exp">导出备份</button><button class="btn ghost" data-act="imp">导入备份</button>'
     +'<textarea id="io" placeholder="点「导出备份」复制这里全部文字保存到备忘录；换手机时粘贴回来点「导入备份」"></textarea>'
     +'<div class="sub" style="margin-top:8px">iPhone：Safari 打开 → 分享 → 添加到主屏幕。若显示旧版：链接后加 <b>?v=4</b> 或删除旧图标重新添加。</div>'
-    +'<div class="sub">v4 · 2026-09-25 · 课程系统版</div></div>';
+    +'<div class="sub">v6 · 活的配速系统：周为单位 · 落后自动加量 · 未完成不跳过</div></div>';
   $('p_review').innerHTML=h;
   renderWt();
 }
@@ -418,7 +548,9 @@ document.addEventListener('click',function(e){
   if(a==='nav'){ show(c.dataset.p); }
   else if(a==='chip'){
     const k=c.dataset.k, i=+c.dataset.i;
-    data[k][i]=!data[k][i]; c.classList.toggle('on',data[k][i]); save(); bars();
+    data[k][i]=!data[k][i]; save(); bars();
+    if(c.dataset.w){ renderToday(); }
+    else { c.classList.toggle('on',data[k][i]); updatePace(); }
   }
   else if(a==='row'){
     const id=c.dataset.id, b=blk(), p=b.done.indexOf(id);
@@ -441,7 +573,7 @@ document.addEventListener('click',function(e){
   }
 });
 function bars(){
-  bar('b_m1',data.m1); bar('b_m2',data.m2); bar('b_m3',data.m3); bar('b_sp',data.sp); bar('b_hv',data.hv);
+  bar('b_m1',data.m1); bar('b_m2',data.m2); bar('b_m3',data.m3); bar('b_sp',data.sp); bar('b_hv',data.hv); bar('b_wd',data.wd);
   bar('b_pz',data.pz); bar('b_pm',data.pm);
   bar('b_cz',data.cz); bar('b_cm',data.cm);
   bar('b_bio',data.bio); bar('b_gr',data.gr);
@@ -450,6 +582,7 @@ function bars(){
 
 /* ================= 启动 ================= */
 (function init(){
+  ensureSnap();
   const n1=daysTo('2026-10-08'), n2=daysTo('2027-02-21'), n3=daysTo('2027-06-07');
   $('cd1').textContent=n1>0?n1+'天':(n1===0?'今天':'已考');
   $('cd2').textContent=n2>0?n2+'天':'到啦';
@@ -458,6 +591,7 @@ function bars(){
   $('dateline').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · '+WD[d.getDay()]+(SPRINT[DSTR()]?' · 冲刺期':'');
   renderMath(); renderPhysics(); renderChem(); renderBio(); renderEnglish(); renderToday(); renderReview();
   bars();
+  updatePace();
 })();
 </script>
 </body>
