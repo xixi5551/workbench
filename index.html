@@ -122,29 +122,75 @@ input#wt {
 .prow:last-child { border-bottom:0; }
 .prow .pn { font-weight:600; flex:none; }
 .prow .pv { color:var(--text-muted); font-size:11px; flex:1; text-align:right; }
+/* 侧拉抽屉导航 */
+.hd-top { display:flex; align-items:center; gap:9px; }
+.burger {
+  width:34px; height:34px; flex:none; border:0; border-radius:10px;
+  background:rgba(255,255,255,.7); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:3.5px; cursor:pointer;
+}
+.burger i { display:block; width:16px; height:2px; border-radius:2px; background:var(--primary-dark); }
+.drawer-mask {
+  position:fixed; inset:0; background:rgba(44,51,56,.4); z-index:200;
+  opacity:0; visibility:hidden; transition:opacity .22s, visibility .22s;
+}
+.drawer-mask.on { opacity:1; visibility:visible; }
+.drawer {
+  position:fixed; top:0; left:0; bottom:0; width:250px; max-width:78vw; z-index:201;
+  background:#fff; box-shadow:3px 0 16px rgba(74,157,127,.16);
+  transform:translateX(-102%); transition:transform .25s ease;
+  display:flex; flex-direction:column; padding:0 0 16px;
+}
+.drawer.on { transform:translateX(0); }
+.drawer .dh {
+  background:linear-gradient(135deg,#f9d9e4,#f5c2d0); padding:16px 16px 13px;
+  font-size:15px; font-weight:800; color:var(--primary-dark); letter-spacing:.5px;
+}
+.drawer .dh span { display:block; font-size:11px; font-weight:600; color:#a0707f; margin-top:3px; letter-spacing:0; }
+.drawer .dbody { overflow-y:auto; padding:8px 10px 0; }
+.drawer .dgroup { font-size:10.5px; color:var(--text-muted); font-weight:700; letter-spacing:1px; padding:12px 8px 5px; }
+.drawer .ditem {
+  display:flex; align-items:center; gap:10px; padding:10px 11px; border-radius:11px;
+  font-size:14px; font-weight:600; color:var(--text); cursor:pointer; margin-bottom:2px;
+}
+.drawer .ditem .di { width:20px; text-align:center; font-size:15px; }
+.drawer .ditem.on { background:#fdeef3; color:var(--primary-dark); }
+.drawer .ditem:active { background:#faf3f5; }
+h2 .hd-note { font-size:11px; color:var(--text-muted); font-weight:500; margin-left:6px; }
 </style>
 </head>
 <body>
 <header>
-  <div class="hd-title">高考作战室 · 课程系统</div>
+  <div class="hd-top">
+    <button class="burger" data-act="drawer" aria-label="菜单"><i></i><i></i><i></i></button>
+    <div><div class="hd-title">高考作战室</div><div class="sub" style="color:#a0707f;margin:1px 0 0;font-weight:600" id="hdpage">今日任务</div></div>
+  </div>
   <div class="cd">
     <div><b id="cd1">-</b><span>距月考</span></div>
-    <div><b id="cd2">-</b><span>一轮截止2/21</span></div>
+    <div><b id="cd2">-</b><span>一轮截止1/31</span></div>
     <div><b id="cd3">-</b><span>距高考</span></div>
   </div>
-  <div class="sub" id="dateline" style="color:#a0707f;margin:-2px 0 4px;"></div>
-  <nav>
-    <button data-act="nav" data-p="today" class="on">今日</button>
-    <button data-act="nav" data-p="math">数学</button>
-    <button data-act="nav" data-p="physics">物理</button>
-    <button data-act="nav" data-p="chem">化学</button>
-    <button data-act="nav" data-p="bio">生物</button>
-    <button data-act="nav" data-p="english">英语</button>
-    <button data-act="nav" data-p="review">复盘</button>
-  </nav>
+  <div class="sub" id="dateline" style="color:#a0707f;margin:-2px 0 2px;"></div>
 </header>
+<div class="drawer-mask" id="dmask" data-act="drawerclose"></div>
+<aside class="drawer" id="drawer">
+  <div class="dh">高考作战室<span id="dcap">课程系统 · 活的配速</span></div>
+  <div class="dbody">
+    <div class="dgroup">任务</div>
+    <div class="ditem on" data-act="nav" data-p="today"><span class="di">◎</span>今日任务</div>
+    <div class="ditem" data-act="nav" data-p="week"><span class="di">▤</span>周任务</div>
+    <div class="dgroup">科目</div>
+    <div class="ditem" data-act="nav" data-p="math"><span class="di">∑</span>数学</div>
+    <div class="ditem" data-act="nav" data-p="physics"><span class="di">⚛</span>物理</div>
+    <div class="ditem" data-act="nav" data-p="chem"><span class="di">⚗</span>化学</div>
+    <div class="ditem" data-act="nav" data-p="bio"><span class="di">❦</span>生物</div>
+    <div class="ditem" data-act="nav" data-p="english"><span class="di">A</span>英语</div>
+    <div class="ditem" data-act="nav" data-p="review"><span class="di">◔</span>复盘 · 设置</div>
+  </div>
+</aside>
 <main>
   <section id="p_today" class="on"></section>
+  <section id="p_week"></section>
   <section id="p_math"></section>
   <section id="p_physics"></section>
   <section id="p_chem"></section>
@@ -368,7 +414,7 @@ function lessonUnits(slot){
   else if(t==='bio') k='bio';
   if(!k||nextIdx(k)<0) return [];
   const tr=TRACKS[k],hi=tr.to||data[tr.key].length,st=nextIdx(k),out=[];
-  for(let j=0;j<(slot.n||1)&&st+j<hi;j++) out.push({k:k,idx:st+j});
+  for(let j=0;j<(slot.n||1)&&st+j<hi;j++) out.push({k:k,dk:tr.key,idx:st+j});
   return out;
 }
 function lessonName(k,idx){
@@ -380,12 +426,31 @@ function lessonName(k,idx){
   if(k==='hv') return HARVEST[idx];
   return unitName(k,idx);
 }
+/* 整理/练习类任务的开张检查：该科一节都没学过时，没有笔记错题可整理，自动跳过 */
+function reviewReady(s){
+  if(s==='physics') return data.pz.concat(data.pm).some(Boolean);
+  if(s==='chem') return data.cz.concat(data.cm).some(Boolean);
+  if(s==='math') return data.m1.some(Boolean);
+  if(s==='bio') return data.bio.some(Boolean);
+  return true;
+}
+function reviewHint(s){
+  if(s==='physics') return '物理还没开张：今晚不用碰物理，等物理正课日直接上零基础第 1 讲';
+  if(s==='chem') return '化学还没开张：今晚不用碰化学，等化学日从 0 轮视频① 开始';
+  if(s==='bio') return '生物还没开张：等周日或假期从第 1 节开始';
+  return '该科还没开张：今晚不用管';
+}
 function updatePace(){
   const ids={pl_m1:'m1',pl_hv:'hv',pl_sp:'sp',pl_m2:'m2',pl_m3:'m3',pl_pz1:'pz1',pl_pms:'pms',pl_pz2:'pz2',pl_pma:'pma',pl_cz:'cz',pl_cm:'cm',pl_bio:'bio',pl_gr:'gr',pl_wd:'wd'};
   for(const id in ids){ const el=$(id); if(el) el.innerHTML=paceLine(ids[id]); }
-  if($('pace_rows')) $('pace_rows').innerHTML=paceRows();
-  if($('pace_banner')) $('pace_banner').innerHTML=paceBanner();
-  if($('week_board')) $('week_board').innerHTML=weekBoard();
+  const rows=paceRows(), banner=paceBanner(), board=weekBoard();
+  if($('pace_rows')) $('pace_rows').innerHTML=rows;
+  if($('pace_banner')) $('pace_banner').innerHTML=banner;
+  if($('week_board')) $('week_board').innerHTML=board;
+  if($('week_pace_rows')) $('week_pace_rows').innerHTML=rows;
+  if($('week_banner')) $('week_banner').innerHTML=banner;
+  if($('week_board2')) $('week_board2').innerHTML=board;
+  if($('upcoming')) $('upcoming').innerHTML=upcomingDays();
   const hm=$('h_m1');
   if(hm){ const n=nextIdx('m1'); hm.textContent='① 一轮 72 讲 · '+(n<0?'已全部清完':'当前追到第 '+String(n+1).padStart(2,'0')+' 讲'+(n<38?' · '+M1_LABELS[n]:'')); }
 }
@@ -516,15 +581,53 @@ function renderEnglish(){
   updatePace();
 }
 
+/* ================= 周任务页 ================= */
+function renderWeek(){
+  let h='<div id="week_banner"></div>';
+  h+='<div class="card"><h3 style="margin-top:0">本周硬任务 · 没清完的不跳过</h3><div id="week_board2"></div>'
+    +'<div class="sub" style="margin-top:8px">点单位直接打卡，清一个少一个；今天没清完，明天它还排在最前面等着，周内补上就回到正轨。</div></div>';
+  h+='<div class="card"><h3 style="margin-top:0">配速总览 <span class="hd-note">剩X · 周Y = 还剩X个，每周要清Y个</span></h3><div id="week_pace_rows"></div>'
+    +'<div class="sub" style="margin-top:7px">每周应清多少 = 剩余 ÷ 距截止周数，每周一自动重算；落后自动加量、超前自动放松。点一行跳到对应科目。</div></div>';
+  h+='<div class="card"><h3 style="margin-top:0">配速铁律</h3><div class="tip green" style="margin-top:4px">'
+    +'<b>周是最小单位。</b>本周该清的没清完，它不会消失，下周自动并入新量一起追；连续两周没跟上，配速会自动加量（每周应清变大），逼着你回到正轨。'
+    +'上学日每天只上一节新课，数学/物理绝不同天——大课留到假期和周末补。</div></div>';
+  h+='<div class="card"><h3 style="margin-top:0">未来 7 天</h3><div id="upcoming"></div></div>';
+  $('p_week').innerHTML=h;
+  updatePace();
+}
+function upcomingDays(){
+  let h='';
+  for(let k=0;k<7;k++){
+    const dd=new Date(); dd.setDate(dd.getDate()+k);
+    const ds=fmt(dd), wd=dd.getDay();
+    const def=SPRINT[ds]||THEME[wd];
+    const isSprint=!!SPRINT[ds];
+    if(!def) continue;
+    const items=[];
+    def.items.forEach(it=>{
+      if(it.slot==='word'){ items.push('单词带背'); return; }
+      if(it.slot==='lesson'||it.slot==='harvest'||it.slot==='chem'||it.slot==='bio'){
+        const us=lessonUnits(it);
+        us.forEach(u=>items.push(lessonName(u.k,u.idx)));
+        return;
+      }
+      if(it.slot==='review'&&!reviewReady(it.s)) return;
+      if(it.x) items.push(it.x);
+    });
+    h+='<div class="prow" style="align-items:flex-start"><span class="pn" style="width:52px">'+
+      (k===0?'今天':(dd.getMonth()+1)+'/'+dd.getDate())+'</span><span class="pv" style="text-align:left;flex:1;color:var(--text)">'+
+      (items.length?items.join(' · '):'休息/自由安排')+(isSprint?' <span class="mut">冲刺</span>':'')+'</span></div>';
+  }
+  return h||'<div class="sub">暂无安排</div>';
+}
+
 /* ================= 今日页 ================= */
 function renderToday(){
   const t=DSTR(), b=blk(), d=new Date(), wd=d.getDay();
   const def=SPRINT[t]||THEME[wd];
   const pre=SPRINT[t]?'s':'t';
   let h='<div id="pace_banner"></div>';
-  h+='<div class="card"><h3 style="margin-top:0">配速总览 <span class="mut" style="font-weight:400;font-size:11px">剩X · 周Y = 还剩X个，每周要清Y个</span></h3><div id="pace_rows"></div>'
-    +'<div class="sub" style="margin-top:7px">每周应清多少 = 剩余 ÷ 距截止周数，每周一自动重算；落后自动加量、超前自动放松。点一行跳到对应科目。</div></div>';
-  h+='<div class="card"><h3 style="margin-top:0">本周硬任务 · 没清完的不跳过</h3><div id="week_board"></div>'
+  h+='<div class="card"><h3 style="margin-top:0">本周要清的硬任务 <span class="hd-note" style="cursor:pointer" data-act="nav" data-p="week">全部配速 →</span></h3><div id="week_board"></div>'
     +'<div class="sub" style="margin-top:8px">点单位直接打卡，清一个少一个；今天没清完，明天它还排在最前面等着，周内补上就回到正轨。</div></div>';
   h+='<div class="card">';
   h+='<span class="tag'+(SPRINT[t]?' red':'')+'">'+def.tag+'</span>';
@@ -544,9 +647,13 @@ function renderToday(){
       }
       us.forEach(u=>{
         const id=pre+i+'x'+u.idx;
-        const on=b.done.includes(id)||data[u.k][u.idx];
-        h+='<div class="row'+(on?' on':'')+'" data-act="row" data-id="'+id+'" data-track="'+u.k+'" data-idx="'+u.idx+'"><span class="dot"></span><div><div class="t">'+lessonName(u.k,u.idx)+'</div><div class="s">'+subOfTrack(u.k)+(it.h?' · '+it.h:'')+'</div></div></div>';
+        const on=b.done.includes(id)||data[u.dk][u.idx];
+        h+='<div class="row'+(on?' on':'')+'" data-act="row" data-id="'+id+'" data-track="'+u.dk+'" data-idx="'+u.idx+'"><span class="dot"></span><div><div class="t">'+lessonName(u.k,u.idx)+'</div><div class="s">'+subOfTrack(u.k)+(it.h?' · '+it.h:'')+'</div></div></div>';
       });
+      return;
+    }
+    if(it.slot==='review'&&!reviewReady(it.s)){
+      h+='<div class="row" style="opacity:.55"><span class="dot"></span><div><div class="t">'+reviewHint(it.s)+'</div><div class="s">'+SUBNM[it.s]+' · 自动跳过</div></div></div>';
       return;
     }
     const on=b.done.includes(pre+i);
@@ -620,17 +727,23 @@ function renderWt(){
 }
 
 /* ================= 事件 ================= */
+const PAGE_NAME={today:'今日任务',week:'周任务',math:'数学',physics:'物理',chem:'化学',bio:'生物',english:'英语',review:'复盘 · 设置'};
 function show(p){
-  ['today','math','physics','chem','bio','english','review'].forEach(x=>{
+  ['today','week','math','physics','chem','bio','english','review'].forEach(x=>{
     $('p_'+x).classList.toggle('on',x===p);
   });
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  document.querySelectorAll('.ditem').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+  const hp=$('hdpage'); if(hp) hp.textContent=PAGE_NAME[p]||'';
+  drawer(false);
   window.scrollTo(0,0);
 }
+function drawer(on){ $('drawer').classList.toggle('on',on); $('dmask').classList.toggle('on',on); }
 document.addEventListener('click',function(e){
   const c=e.target.closest('[data-act]'); if(!c) return;
   const a=c.dataset.act;
   if(a==='nav'){ show(c.dataset.p); }
+  else if(a==='drawer'){ drawer(!$('drawer').classList.contains('on')); }
+  else if(a==='drawerclose'){ drawer(false); }
   else if(a==='chip'){
     const k=c.dataset.k, i=+c.dataset.i;
     data[k][i]=!data[k][i]; save(); bars();
@@ -683,7 +796,7 @@ function bars(){
   $('cd3').textContent=n3>0?n3+'天':'加油';
   const d=new Date();
   $('dateline').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · '+WD[d.getDay()]+(SPRINT[DSTR()]?' · 冲刺期':'');
-  renderMath(); renderPhysics(); renderChem(); renderBio(); renderEnglish(); renderToday(); renderReview();
+  renderMath(); renderPhysics(); renderChem(); renderBio(); renderEnglish(); renderToday(); renderWeek(); renderReview();
   bars();
   updatePace();
 })();
